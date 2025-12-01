@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMakFit - Test Result</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Manrope:wght@600;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+    @import url("https://cdnjs.cloudflare.com/ajax/libs/meyer-reset/2.0/reset.min.css");
+    
+    * {
+        -webkit-font-smoothing: antialiased;
+        box-sizing: border-box;
+        font-family: 'Inter', sans-serif;
+    }
+    
+    html, body {
+        margin: 0;
+        height: 100%;
+    }
+    
+    button:focus-visible {
+        outline: 2px solid #4a90e2 !important;
+    }
+    
+    a {
+        text-decoration: none;
+    }
+
+    body {
+        background:#ffffff;
+        min-height: 100vh;
+    }
+
+    /* Navbar Styles */
+    .navbar-custom {
+        background: linear-gradient(180deg, rgba(30, 58, 138, 1) 0%, rgba(59, 130, 246, 1) 100%);
+        padding: 20px 0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        border-bottom: none;
+        height: auto;
+    }
+
+    .navbar-brand {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin: 0;
+        padding: 0;
+    }
+
+    .navbar-brand-img {
+        height: 60px;
+        width: auto;
+        object-fit: contain;
+    }
+
+    .navbar-brand-text {
+        font-family: "Manrope", Helvetica;
+        font-weight: 800;
+        font-size: 28px;
+        background: linear-gradient(90deg, rgba(245, 158, 11, 1) 0%, rgba(255, 229, 0, 1) 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        line-height: 1;
+    }
+
+    .nav-container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 20px;
+    }
+
+    .nav-pills-custom {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        padding: 0;
+        margin: 0;
+        list-style: none;
+    }
+
+    .nav-link-custom {
+        font-family: "Manrope", Helvetica;
+        font-weight: 600;
+        color: #000000;
+        font-size: 14px;
+        padding: 12px 18px;
+        border-radius: 8px;
+        background-color: #ffffff;
+        transition: all 0.3s;
+        border: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        text-decoration: none;
+    }
+
+    .nav-link-custom:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        color: #000000;
+    }
+
+    .nav-link-custom i {
+        font-size: 14px;
+    }
+
+    .nav-link-custom.active {
+        background: linear-gradient(90deg, rgba(251, 191, 36, 1) 0%, rgba(245, 158, 11, 1) 100%);
+        box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+    }
+
+    .btn-logout-nav {
+        background: linear-gradient(90deg, rgba(251, 191, 36, 1) 0%, rgba(245, 158, 11, 1) 100%);
+        border: none;
+        color: #000000;
+        padding: 8px 20px;
+        border-radius: 8px;
+        font-family: "Manrope", Helvetica;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+        transition: all 0.3s;
+        box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .btn-logout-nav:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(245, 158, 11, 0.4);
+    }
+
+    /* Main Content */
+    .main-content {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+    }
+
+    /* Result Container */
+    .result-container {
+        background: white;
+        border-radius: 24px;
+        padding: 0;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        margin-bottom: 2rem;
+        overflow: hidden;
+    }
+
+    /* Hero Section with Score */
+    .hero-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 3rem 2rem;
+        text-align: center;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .hero-section::before {
+        content: '';
+        position: absolute;
+        top: -50%;
+        left: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        animation: pulse 4s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); opacity: 1; }
+        50% { transform: scale(1.1); opacity: 0.8; }
+    }
+
+    .hero-content {
+        position: relative;
+        z-index: 1;
+    }
+
+    .completion-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        backdrop-filter: blur(10px);
+        padding: 10px 24px;
+        border-radius: 50px;
+        margin-bottom: 1.5rem;
+        border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .completion-badge i {
+        font-size: 20px;
+        color: #10b981;
+    }
+
+    .completion-badge span {
+        font-family: "Inter", Helvetica;
+        font-weight: 600;
+        color: white;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .score-wrapper {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 2rem;
+        margin: 2rem 0;
+    }
+
+    .score-circle {
+        position: relative;
+        width: 180px;
+        height: 180px;
+    }
+
+    .score-ring {
+        width: 100%;
+        height: 100%;
+        transform: rotate(-90deg);
+    }
+
+    .score-ring-bg {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.2);
+        stroke-width: 12;
+    }
+
+    .score-ring-progress {
+        fill: none;
+        stroke: url(#scoreGradient);
+        stroke-width: 12;
+        stroke-linecap: round;
+        stroke-dasharray: 502;
+        stroke-dashoffset: 502;
+        animation: fillScore 2s ease-out forwards;
+        filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.5));
+    }
+
+    @keyframes fillScore {
+        to {
+            stroke-dashoffset: calc(502 - (502 * var(--score)) / 100);
+        }
+    }
+
+    .score-content {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
+
+    .score-number {
+        font-family: "Inter", Helvetica;
+        font-weight: 800;
+        font-size: 3.5rem;
+        color: white;
+        line-height: 1;
+        text-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    .score-label {
+        font-family: "Inter", Helvetica;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-top: 5px;
+    }
+
+    .score-details {
+        text-align: left;
+    }
+
+    .test-title {
+        font-family: "Inter", Helvetica;
+        font-weight: 800;
+        color: white;
+        font-size: 2rem;
+        margin-bottom: 1rem;
+        text-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    }
+
+    .score-rating {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        border-radius: 50px;
+        font-family: "Inter", Helvetica;
+        font-weight: 700;
+        font-size: 16px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .rating-excellent {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+    }
+
+    .rating-good {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        color: white;
+    }
+
+    .rating-fair {
+        background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+        color: white;
+    }
+
+    .rating-needs-improvement {
+        background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+        color: white;
+    }
+
+    .stat-badges {
+        display: flex;
+        gap: 1rem;
+        margin-top: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .stat-badge {
+        background: rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(10px);
+        padding: 12px 20px;
+        border-radius: 12px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .stat-badge-label {
+        font-family: "Inter", Helvetica;
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 4px;
+    }
+
+    .stat-badge-value {
+        font-family: "Inter", Helvetica;
+        font-weight: 700;
+        color: white;
+        font-size: 16px;
+    }
+
+    /* Content Section */
+    .content-section {
+        padding: 3rem 2rem;
+    }
+
+    /* Details Grid */
+    .details-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .detail-card {
+        background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+        border-radius: 16px;
+        padding: 1.5rem;
+        border-left: 4px solid #667eea;
+        transition: all 0.3s;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .detail-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .detail-icon {
+        font-size: 24px;
+        margin-bottom: 0.5rem;
+    }
+
+    .detail-label {
+        font-family: "Inter", Helvetica;
+        font-weight: 700;
+        color: #64748b;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 0.5rem;
+    }
+
+    .detail-value {
+        font-family: "Inter", Helvetica;
+        font-weight: 700;
+        color: #1e293b;
+        font-size: 18px;
+        word-break: break-word;
+    }
+
+    /* Recommendation Section */
+    .recommendation-section {
+        background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+        border-radius: 16px;
+        padding: 2rem;
+        margin-bottom: 2rem;
+        border-left: 5px solid #f59e0b;
+        box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+    }
+
+    .recommendation-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 1rem;
+    }
+
+    .recommendation-icon {
+        font-size: 28px;
+    }
+
+    .recommendation-title {
+        font-family: "Inter", Helvetica;
+        font-weight: 700;
+        color: #92400e;
+        font-size: 20px;
+        margin: 0;
+    }
+
+    .recommendation-text {
+        font-family: "Inter", Helvetica;
+        font-weight: 500;
+        color: #78350f;
+        font-size: 15px;
+        line-height: 1.8;
+        margin: 0;
+    }
+
+    .loading-recommendation {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #92400e;
+    }
+
+    .loading-spinner {
+        width: 20px;
+        height: 20px;
+        border: 3px solid #fde68a;
+        border-top: 3px solid #f59e0b;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Action Buttons */
+    .action-buttons {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+        flex-wrap: wrap;
+    }
+
+    .btn-action {
+        padding: 16px 36px;
+        border-radius: 12px;
+        border: none;
+        font-family: "Inter", Helvetica;
+        font-weight: 700;
+        font-size: 15px;
+        cursor: pointer;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        text-decoration: none;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .btn-primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+
+    .btn-primary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+
+    .btn-secondary {
+        background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        color: white;
+    }
+
+    .btn-secondary:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+        color: white;
+    }
+
+    /* Loading Screen */
+    .loading {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .spinner {
+        border: 5px solid rgba(255, 255, 255, 0.3);
+        border-top: 5px solid white;
+        border-radius: 50%;
+        width: 60px;
+        height: 60px;
+        animation: spin 1s linear infinite;
+    }
+
+    .loading-text {
+        font-family: "Inter", sans-serif;
+        font-weight: 600;
+        color: white;
+        font-size: 18px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .main-content {
+            padding: 1rem;
+        }
+
+        .hero-section {
+            padding: 2rem 1rem;
+        }
+
+        .score-wrapper {
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .score-details {
+            text-align: center;
+        }
+
+        .test-title {
+            font-size: 1.5rem;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+        }
+
+        .score-number {
+            font-size: 2.5rem;
+        }
+
+        .stat-badges {
+            justify-content: center;
+        }
+
+        .details-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .action-buttons {
+            flex-direction: column;
+        }
+
+        .btn-action {
+            width: 100%;
+            justify-content: center;
+        }
+    }
+    </style>
+</head>
+<body>
+    <div id="loadingScreen" class="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Processing your results...</div>
+    </div>
+
+    <div id="mainContent" style="display: none;">
+        <!-- Navigation -->
+        <nav class="navbar navbar-expand-lg navbar-custom">
+            <div class="container">
+                <div class="nav-container w-100">
+                    <a class="navbar-brand" href="#">
+                        <img src="https://c.animaapp.com/vkhEa8zW/img/screenshot-2025-09-19-2-53-51-pm-removebg-preview-3@2x.png" 
+                             alt="UMak Logo" class="navbar-brand-img">
+                        <span class="navbar-brand-text">UMakFit</span>
+                    </a>
+                    
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="nav-pills-custom ms-auto">
+                            <li class="nav-item">
+                                <a class="nav-link-custom" href="./studentDashboard.html">
+                                    <i class="bi bi-speedometer2"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link-custom" href="./studentProfile.html">
+                                    <i class="bi bi-person-circle"></i> Profile
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link-custom active" href="./test.html">
+                                    <i class="bi bi-clipboard-check"></i> Test
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link-custom" href="./progress.html">
+                                    <i class="bi bi-graph-up"></i> Progress
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link-custom" href="#">
+                                    <i class="bi bi-book"></i> Learn
+                                </a>
+                            </li>
+                            <li class="nav-item d-flex align-items-center gap-2 ms-2">
+                                <button class="btn-logout-nav" onclick="handleLogout()">
+                                    <i class="bi bi-box-arrow-right"></i> Logout
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <div class="main-content">
+            <div class="result-container">
+                <!-- Hero Section with Score -->
+                <div class="hero-section">
+                    <div class="hero-content">
+                        <div class="completion-badge">
+                            <i class="bi bi-check-circle-fill"></i>
+                            <span>Test Completed</span>
+                        </div>
+                        
+                        <div class="score-wrapper">
+                            <div class="score-circle">
+                                <svg class="score-ring" viewBox="0 0 180 180">
+                                    <defs>
+                                        <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                    <circle class="score-ring-bg" cx="90" cy="90" r="80" />
+                                    <circle class="score-ring-progress" cx="90" cy="90" r="80" id="scoreProgress" />
+                                </svg>
+                                <div class="score-content">
+                                    <div class="score-number" id="scoreValue">--</div>
+                                    <div class="score-label">SCORE</div>
+                                </div>
+                            </div>
+                            
+                            <div class="score-details">
+                                <h1 class="test-title" id="testName">--</h1>
+                                <div id="scoreRating"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="stat-badges">
+                            <div class="stat-badge">
+                                <div class="stat-badge-label">Result</div>
+                                <div class="stat-badge-value" id="testResult">--</div>
+                            </div>
+                            <div class="stat-badge">
+                                <div class="stat-badge-label">Completed</div>
+                                <div class="stat-badge-value" id="completedDate">--</div>
+                            </div>
+                            <div class="stat-badge">
+                                <div class="stat-badge-label">Duration</div>
+                                <div class="stat-badge-value" id="timerValue">--</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Content Section -->
+                <div class="content-section">
+                    <div class="recommendation-section" id="recommendationSection">
+                        <div class="recommendation-header">
+                            <span class="recommendation-icon">💡</span>
+                            <h3 class="recommendation-title">Personalized Recommendations</h3>
+                        </div>
+                        <div id="recommendationContent">
+                            <div class="loading-recommendation">
+                                <div class="loading-spinner"></div>
+                                <span>Generating personalized recommendations for you...</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons" id="mainActionButtons">
+                        <button onclick="goToTests()" class="btn-action btn-primary">
+                            <i class="bi bi-clipboard-check"></i> View All Tests
+                        </button>
+                        <a href="./progress.html" class="btn-action btn-secondary">
+                            <i class="bi bi-graph-up"></i> Track My Progress
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, doc, getDoc, collection, query, where, getDocs } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAgaLunqEf2gs6dSpF_sz1hV5XQ5Wm52jo",
+            authDomain: "umakfit-e3b1d.firebaseapp.com",
+            projectId: "umakfit-e3b1d",
+            storageBucket: "umakfit-e3b1d.appspot.com",
+            messagingSenderId: "276569891504",
+            appId: "1:276569891504:web:39b1732b519f4d8b785175"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        function calculateScore(testName, result, testTarget = null) {
+            const normalized = testName.toLowerCase();
+            
+            if (testTarget && testTarget > 0) {
+                const value = parseFloat(result);
+                
+                if (normalized.includes('push-up') || normalized.includes('pushup') || 
+                    normalized.includes('sit-up') || normalized.includes('situp')) {
+                    const reps = parseInt(result);
+                    if (reps >= testTarget) return 100;
+                    if (reps >= testTarget * 0.9) return 95;
+                    if (reps >= testTarget * 0.8) return 90;
+                    if (reps >= testTarget * 0.7) return 85;
+                    if (reps >= testTarget * 0.6) return 80;
+                    if (reps >= testTarget * 0.5) return 75;
+                    return Math.max(50, Math.round((reps / testTarget) * 100));
+                } else if (normalized.includes('plank')) {
+                    const seconds = parseInt(result.split(':')[1] || result);
+                    if (seconds >= testTarget) return 100;
+                    if (seconds >= testTarget * 0.9) return 95;
+                    if (seconds >= testTarget * 0.8) return 90;
+                    if (seconds >= testTarget * 0.7) return 85;
+                    if (seconds >= testTarget * 0.6) return 80;
+                    if (seconds >= testTarget * 0.5) return 75;
+                    return Math.max(50, Math.round((seconds / testTarget) * 100));
+                } else if (normalized.includes('sit-and-reach')) {
+                    const distance = parseFloat(result);
+                    if (distance >= testTarget) return 100;
+                    if (distance >= testTarget * 0.9) return 95;
+                    if (distance >= testTarget * 0.8) return 90;
+                    if (distance >= testTarget * 0.7) return 85;
+                    if (distance >= testTarget * 0.6) return 80;
+                    if (distance >= testTarget * 0.5) return 75;
+                    return Math.max(50, Math.round((distance / testTarget) * 100));
+                }
+            }
+            
+            if (normalized.includes('push-up') || normalized.includes('pushup')) {
+                const reps = parseInt(result);
+                if (reps >= 40) return 100;
+                if (reps >= 30) return 90;
+                if (reps >= 20) return 80;
+                if (reps >= 15) return 70;
+                if (reps >= 10) return 60;
+                return 50;
+            } else if (normalized.includes('sit-up') || normalized.includes('situp')) {
+                const reps = parseInt(result);
+                if (reps >= 50) return 100;
+                if (reps >= 40) return 90;
+                if (reps >= 30) return 80;
+                if (reps >= 20) return 70;
+                if (reps >= 15) return 60;
+                return 50;
+            } else if (normalized.includes('plank')) {
+                const seconds = parseInt(result.split(':')[1] || result);
+                if (seconds >= 120) return 100;
+                if (seconds >= 90) return 90;
+                if (seconds >= 60) return 80;
+                if (seconds >= 45) return 70;
+                if (seconds >= 30) return 60;
+                return 50;
+            } else if (normalized.includes('step test') || normalized.includes('3-minute')) {
+                const heartRate = parseInt(result);
+                if (heartRate <= 80) return 100;
+                if (heartRate <= 100) return 90;
+                if (heartRate <= 120) return 80;
+                if (heartRate <= 140) return 70;
+                if (heartRate <= 160) return 60;
+                return 50;
+            } else if (normalized.includes('mile') || normalized.includes('run')) {
+                const [minutes, seconds] = result.split(':').map(Number);
+                const totalSeconds = minutes * 60 + (seconds || 0);
+                if (totalSeconds <= 420) return 100;
+                if (totalSeconds <= 480) return 90;
+                if (totalSeconds <= 540) return 80;
+                if (totalSeconds <= 600) return 70;
+                if (totalSeconds <= 660) return 60;
+                return 50;
+            } else if (normalized.includes('sit-and-reach')) {
+                const distance = parseFloat(result);
+                if (distance >= 20) return 100;
+                if (distance >= 15) return 90;
+                if (distance >= 10) return 80;
+                if (distance >= 5) return 70;
+                if (distance >= 0) return 60;
+                return 50;
+            }
+            
+            return 75;
+        }
+
+        function getRating(score) {
+            if (score >= 90) return { text: 'Excellent', class: 'rating-excellent' };
+            if (score >= 80) return { text: 'Good', class: 'rating-good' };
+            if (score >= 70) return { text: 'Fair', class: 'rating-fair' };
+            return { text: 'Needs Improvement', class: 'rating-needs-improvement' };
+        }
+
+        async function generateRecommendation(testName, result, score, timerValue) {
+            console.log('🤖 Calling AI API for personalized recommendation...');
+            console.log('Test:', testName, '| Score:', score, '| Result:', result);
+            
+            try {
+                const prompt = `You are a professional fitness coach with expertise in physical fitness assessments. A student just completed a ${testName} test with the following results:
+- Result: ${result}
+- Score: ${score}/100
+- Timer: ${timerValue}
+
+Based on their performance, provide a unique, personalized recommendation (2-3 sentences) that:
+1. Specifically acknowledges their ${score >= 80 ? 'strong' : score >= 60 ? 'good' : 'initial'} performance
+2. Gives actionable, test-specific advice to improve their score
+3. Is encouraging and motivating
+
+Make each recommendation unique and tailored to their exact score and test type. Be conversational and supportive. Do not use markdown or special formatting.`;
+
+                const response = await fetch("https://api.anthropic.com/v1/messages", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        model: "claude-sonnet-4-20250514",
+                        max_tokens: 1000,
+                        messages: [
+                            { role: "user", content: prompt }
+                        ],
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API Error: ${response.status}`);
+                }
+
+                const data = await response.json();
+                
+                if (data.content && data.content.length > 0) {
+                    console.log('✅ AI Recommendation generated successfully!');
+                    console.log('Response:', data.content[0].text);
+                    return data.content[0].text;
+                } else {
+                    throw new Error('No recommendation in API response');
+                }
+            } catch (error) {
+                console.error('❌ AI API Failed:', error);
+                console.log('Showing error message to user...');
+                
+                return `Your score of ${score}/100 has been recorded successfully. Please check back later for personalized fitness advice, or consult with your instructor for specific guidance on improving your ${testName} performance.`;
+            }
+        }
+
+        async function loadTestResult() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const resultId = urlParams.get('resultId');
+            const testId = urlParams.get('testId');
+
+            if (!resultId) {
+                alert('No result found');
+                window.location.href = './test.html';
+                return;
+            }
+
+            try {
+                const resultDoc = await getDoc(doc(db, 'testResults', resultId));
+                
+                if (resultDoc.exists()) {
+                    const data = resultDoc.data();
+                    
+                    const score = calculateScore(data.testName, data.result, data.testTarget);
+                    const rating = getRating(score);
+                    
+                    // Update score with animation
+                    const scoreProgress = document.getElementById('scoreProgress');
+                    scoreProgress.style.setProperty('--score', score);
+                    
+                    document.getElementById('scoreValue').textContent = score;
+                    document.getElementById('scoreRating').innerHTML = `<span class="score-rating ${rating.class}"><i class="bi bi-star-fill"></i> ${rating.text}</span>`;
+                    document.getElementById('testName').textContent = data.testName;
+                    document.getElementById('testResult').textContent = data.result;
+                    document.getElementById('completedDate').textContent = new Date(data.submittedAt).toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+                    document.getElementById('timerValue').textContent = data.timerValue || '--';
+                    
+                    document.getElementById('loadingScreen').style.display = 'none';
+                    document.getElementById('mainContent').style.display = 'block';
+                    
+                    const recommendation = await generateRecommendation(
+                        data.testName,
+                        data.result,
+                        score,
+                        data.timerValue
+                    );
+                    
+                    document.getElementById('recommendationContent').innerHTML = `
+                        <p class="recommendation-text">${recommendation}</p>
+                    `;
+
+                    if (testId && score < 100) {
+                        const testDoc = await getDoc(doc(db, 'scheduledTests', testId));
+                        
+                        if (testDoc.exists()) {
+                            const testData = testDoc.data();
+                            const attemptsAllowed = testData.attemptsAllowed || 1;
+                            
+                            const resultsQuery = query(
+                                collection(db, 'testResults'),
+                                where('testId', '==', testId),
+                                where('studentId', '==', data.studentId)
+                            );
+                            
+                            const resultsSnapshot = await getDocs(resultsQuery);
+                            const currentAttempts = resultsSnapshot.size;
+                            
+                            if (currentAttempts < attemptsAllowed) {
+                                const retrySection = document.createElement('div');
+                                retrySection.style.cssText = `
+                                    background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+                                    border-radius: 16px;
+                                    padding: 2rem;
+                                    margin: 2rem 0;
+                                    text-align: center;
+                                    border: 3px solid #f59e0b;
+                                `;
+                                
+                                retrySection.innerHTML = `
+                                    <h3 style="font-family: 'Inter', Helvetica; font-weight: 700; color: #92400e; font-size: 20px; margin-bottom: 1rem;">
+                                        🔄 Want to Improve Your Score?
+                                    </h3>
+                                    <p style="font-family: 'Inter', Helvetica; font-weight: 500; color: #78350f; font-size: 15px; margin-bottom: 1.5rem;">
+                                        You have used <strong>${currentAttempts}</strong> out of <strong>${attemptsAllowed}</strong> attempts.<br>
+                                        You can take this test again to try for a higher score!
+                                    </p>
+                                    <button onclick="retryTest('${testId}')" 
+                                            style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); 
+                                                   color: white; 
+                                                   padding: 12px 32px; 
+                                                   border: none; 
+                                                   border-radius: 12px; 
+                                                   font-family: 'Inter', Helvetica; 
+                                                   font-weight: 700; 
+                                                   font-size: 15px; 
+                                                   cursor: pointer; 
+                                                   box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+                                                   transition: all 0.3s;">
+                                        🎯 Take Attempt ${currentAttempts + 1}/${attemptsAllowed}
+                                    </button>
+                                `;
+                                
+                                const actionButtons = document.querySelector('.action-buttons');
+                                actionButtons.parentNode.insertBefore(retrySection, actionButtons);
+                            }
+                        }
+                    }
+                    
+                } else {
+                    alert('Result not found');
+                    window.location.href = './test.html';
+                }
+            } catch (error) {
+                console.error('Error loading result:', error);
+                alert('Error loading result');
+                window.location.href = './test.html';
+            }
+        }
+
+        window.handleLogout = async function() {
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    await signOut(auth);
+                    window.location.href = '../login/index.html';
+                } catch (error) {
+                    console.error('Error logging out:', error);
+                    alert('Error logging out. Please try again.');
+                }
+            }
+        };
+
+        window.retryTest = function(testId) {
+            if (confirm('🔄 Do you want to take this test again to improve your score?\n\n✅ Click OK to retry the test\n❌ Click Cancel to go back to test list')) {
+                window.location.href = `./testdetails.html?testId=${testId}`;
+            } else {
+                window.location.href = './test.html';
+            }
+        };
+
+        window.goToTests = function() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const testId = urlParams.get('testId');
+            const scoreValue = parseInt(document.getElementById('scoreValue').textContent) || 0;
+            
+            if (scoreValue === 100) {
+                if (confirm('🎉 Congratulations on your perfect score!\n\nClick OK to view other available tests.')) {
+                    window.location.href = './test.html';
+                }
+            } else {
+                window.location.href = './test.html';
+            }
+        };
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                await loadTestResult();
+            } else {
+                window.location.href = '../login/index.html';
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

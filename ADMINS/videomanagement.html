@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UmakFit - Video Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Manrope:600,800|Inter:300,500,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { -webkit-font-smoothing: antialiased; box-sizing: border-box; }
+        body { font-family: 'Inter', Helvetica, sans-serif; margin: 0; padding: 0; background-color: #f8fafc; }
+        
+        .header-top { 
+            background-color: #ffffff; 
+            padding: 15px 0; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08); 
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            z-index: 1000; 
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .header-top .container { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .logo-text { 
+            font-family: "Inter", Helvetica; 
+            font-weight: 700; 
+            color: #1e3a8a; 
+            font-size: 24px; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-text i {
+            color: #f59e0b;
+            font-size: 26px;
+        }
+        .header-actions { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+        }
+        .logout-btn { 
+            padding: 8px 20px; 
+            background: linear-gradient(90deg, rgba(251, 191, 36, 1) 0%, rgba(245, 158, 11, 1) 100%); 
+            border: none; 
+            border-radius: 8px; 
+            color: #000; 
+            font-weight: 600; 
+            font-size: 14px; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+        }
+        .logout-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.4); 
+        }
+        .account-circle { 
+            width: 44px; 
+            height: 44px; 
+            cursor: pointer; 
+            border-radius: 50%;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        .account-circle:hover {
+            border-color: #f59e0b;
+        }
+        
+        .nav-section { 
+            background: linear-gradient(180deg, rgba(30, 58, 138, 1) 0%, rgba(59, 130, 246, 1) 100%); 
+            padding: 20px 0; 
+            margin-top: 74px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .nav-brand { 
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-family: "Manrope", Helvetica; 
+            font-weight: 800; 
+            font-size: 28px; 
+            background: linear-gradient(90deg, rgba(245, 158, 11, 1) 0%, rgba(255, 229, 0, 1) 100%); 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        .nav-pills-custom { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 8px; 
+            padding: 0; 
+            margin: 0;
+        }
+        .nav-pills-custom .nav-link { 
+            font-family: "Manrope", Helvetica; 
+            font-weight: 600; 
+            color: #000000; 
+            font-size: 14px; 
+            padding: 12px 18px;
+            border-radius: 8px; 
+            background-color: #ffffff; 
+            transition: all 0.3s; 
+            border: none; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .nav-pills-custom .nav-link.active { 
+            background: linear-gradient(90deg, rgba(251, 191, 36, 1) 0%, rgba(245, 158, 11, 1) 100%); 
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+        }
+        .nav-pills-custom .nav-link:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15); 
+        }
+        
+        .main-content { 
+            background: linear-gradient(180deg, rgba(248, 250, 252, 1) 0%, rgba(241, 245, 249, 1) 100%); 
+            padding: 40px 0 80px 0; 
+            min-height: calc(100vh - 200px); 
+        }
+        
+        .page-header {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+        .page-title {
+            font-family: "Inter", Helvetica;
+            font-weight: 700;
+            color: #1e3a8a;
+            font-size: 32px;
+            margin: 0 0 10px 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        .page-title i {
+            color: #f59e0b;
+        }
+        .page-subtitle {
+            font-family: "Inter", Helvetica;
+            font-weight: 400;
+            color: #64748b;
+            font-size: 16px;
+            margin: 0;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+        .card-header-custom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .card-title {
+            font-family: "Inter", Helvetica;
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 20px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .add-btn {
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(59, 130, 246, 0.3);
+        }
+        .add-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.4);
+        }
+        
+        .search-filter-bar {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+        .search-box input {
+            width: 100%;
+            padding: 10px 15px 10px 40px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .search-box input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #64748b;
+        }
+        .filter-select {
+            padding: 10px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            min-width: 180px;
+            transition: all 0.3s;
+        }
+        .filter-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        
+        .videos-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .videos-table thead {
+            background: #f8fafc;
+        }
+        .videos-table th {
+            font-family: "Inter", Helvetica;
+            font-weight: 600;
+            color: #64748b;
+            font-size: 12px;
+            text-transform: uppercase;
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 2px solid #e2e8f0;
+            letter-spacing: 0.5px;
+        }
+        .videos-table td {
+            font-family: "Inter", Helvetica;
+            font-weight: 500;
+            color: #475569;
+            font-size: 14px;
+            padding: 16px 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .videos-table tr:hover {
+            background-color: #f8fafc;
+        }
+        .badge {
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+        }
+        .badge-test {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+        .badge-section {
+            background: #fef3c7;
+            color: #92400e;
+        }
+        .action-btn {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            margin-right: 5px;
+        }
+        .btn-edit {
+            background: #3b82f6;
+            color: white;
+        }
+        .btn-edit:hover {
+            background: #2563eb;
+            transform: translateY(-1px);
+        }
+        .btn-delete {
+            background: #ef4444;
+            color: white;
+        }
+        .btn-delete:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+        
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            border-radius: 16px;
+            padding: 0;
+            width: 90%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        .modal-header {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 20px 25px;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .modal-header h3 {
+            margin: 0;
+            font-size: 20px;
+            font-weight: 700;
+        }
+        .modal-body {
+            padding: 25px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        .form-control {
+            width: 100%;
+            padding: 10px 15px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+        .btn-cancel {
+            padding: 10px 20px;
+            background: #f1f5f9;
+            border: none;
+            border-radius: 8px;
+            color: #475569;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-cancel:hover {
+            background: #e2e8f0;
+        }
+        .btn-submit {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3);
+        }
+        
+        .empty-state {
+            padding: 60px 40px;
+            text-align: center;
+        }
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.4;
+        }
+        .empty-title {
+            font-family: "Inter", Helvetica;
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 20px;
+            margin-bottom: 12px;
+        }
+        .empty-text {
+            font-family: "Inter", Helvetica;
+            font-weight: 400;
+            color: #64748b;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+        
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .spinner {
+            border: 4px solid #f1f5f9;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        @media (max-width: 768px) {
+            .page-title { font-size: 24px; }
+            .search-filter-bar { flex-direction: column; }
+            .search-box { min-width: 100%; }
+            .filter-select { width: 100%; }
+            .videos-table { font-size: 12px; }
+            .videos-table th, .videos-table td { padding: 10px 6px; }
+        }
+    </style>
+</head>
+<body>
+    <div id="loadingScreen" class="loading">
+        <div class="spinner"></div>
+        <div>Loading Video Management...</div>
+    </div>
+    
+    <div id="mainContent" style="display: none;">
+        <div class="header-top">
+            <div class="container">
+                <div class="logo-text">
+                    <i class="fas fa-graduation-cap"></i>
+                    University of Makati
+                </div>
+                <div class="header-actions">
+                    <button class="logout-btn" onclick="handleLogout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                    <img class="account-circle" src="https://c.animaapp.com/tzMzyNnw/img/icon.svg" alt="Account">
+                </div>
+            </div>
+        </div>
+        
+        <div class="nav-section">
+            <div class="container">
+                <div class="nav-container">
+                    <div class="nav-brand">
+                        <i class="fas fa-dumbbell" style="font-size: 40px;"></i>
+                        UMakFit
+                    </div>
+                    <ul class="nav nav-pills-custom">
+                        <li class="nav-item">
+                            <a class="nav-link" href="dashboard.html">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="classmanagement.html">
+                                <i class="fas fa-users"></i> Class Management
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="testmanagement.html">
+                                <i class="fas fa-calendar-alt"></i> Scheduling Test
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="videomanagement.html">
+                                <i class="fas fa-video"></i> Video Management
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                <i class="fas fa-chart-bar"></i> Reports & Analytics
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        
+        <div class="main-content">
+            <div class="container">
+                <div class="page-header">
+                    <div class="page-title">
+                        <i class="fas fa-video"></i>
+                        Video Management
+                    </div>
+                    <div class="page-subtitle">
+                        Manage instruction videos for fitness tests. Create and organize video content for students.
+                    </div>
+                </div>
+                
+                <div class="content-card">
+                    <div class="card-header-custom">
+                        <div class="card-title">
+                            <i class="fas fa-list"></i>
+                            Instruction Videos
+                        </div>
+                        <button class="add-btn" onclick="openAddVideoModal()">
+                            <i class="fas fa-plus"></i>
+                            Add Video
+                        </button>
+                    </div>
+                    
+                    <div class="search-filter-bar">
+                        <div class="search-box">
+                            <i class="fas fa-search"></i>
+                            <input type="text" id="searchInput" placeholder="Search by Title or Name or Section..." onkeyup="filterVideos()">
+                        </div>
+                        <select class="filter-select" id="testFilter" onchange="filterVideos()">
+                            <option value="">All Tests</option>
+                            <option value="Flexibility test">Flexibility test</option>
+                            <option value="Push-Up">Push-Up</option>
+                            <option value="3-Min Step Test">3-Min Step Test</option>
+                            <option value="Sit and Reach">Sit and Reach</option>
+                        </select>
+                        <select class="filter-select" id="sectionFilter" onchange="filterVideos()">
+                            <option value="">All Sections</option>
+                        </select>
+                    </div>
+                    
+                    <div id="videosTableContainer">
+                        <div class="empty-state">
+                            <div class="empty-icon">🎥</div>
+                            <div class="empty-title">No Videos Found</div>
+                            <div class="empty-text">Start by adding instruction videos for your fitness tests.</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="addVideoModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <i class="fas fa-video"></i>
+                <h3>Add Instruction Video</h3>
+            </div>
+            <div class="modal-body">
+                <form id="videoForm">
+                    <div class="form-group">
+                        <label class="form-label">Select Test</label>
+                        <select class="form-control" id="videoTest" required>
+                            <option value="">Choose a test...</option>
+                            <option value="Flexibility test">Flexibility test</option>
+                            <option value="Push-Up">Push-Up</option>
+                            <option value="3-Min Step Test">3-Min Step Test</option>
+                            <option value="Sit and Reach">Sit and Reach</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Title</label>
+                        <input type="text" class="form-control" id="videoTitle" placeholder="e.g., Push-Up Test Instructions" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Section</label>
+                        <select class="form-control" id="videoSection" required>
+                            <option value="">Choose a section...</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Upload Video File</label>
+                        <input type="file" class="form-control" id="videoFile" accept="video/*" required>
+                        <small style="color: #64748b; font-size: 12px; margin-top: 5px; display: block;">
+                            Select a video file (MP4, MOV, AVI, etc.) - Max 100MB
+                        </small>
+                        <div id="uploadProgress" style="display: none; margin-top: 10px;">
+                            <div style="background: #e2e8f0; border-radius: 8px; height: 8px; overflow: hidden;">
+                                <div id="progressBar" style="background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%); height: 100%; width: 0%; transition: width 0.3s;"></div>
+                            </div>
+                            <small id="progressText" style="color: #64748b; font-size: 12px; margin-top: 5px; display: block;">Uploading...</small>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeAddVideoModal()">Cancel</button>
+                <button class="btn-submit" onclick="submitVideo()">Add Video</button>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+        import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+        import { getFirestore, doc, getDoc, collection, query, where, getDocs, addDoc, deleteDoc, updateDoc, onSnapshot, Timestamp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+        import { getStorage, ref, uploadBytesResumable, getDownloadURL, deleteObject } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyAgaLunqEf2gs6dSpF_sz1hV5XQ5Wm52jo",
+            authDomain: "umakfit-e3b1d.firebaseapp.com",
+            projectId: "umakfit-e3b1d",
+            storageBucket: "umakfit-e3b1d.appspot.com",
+            messagingSenderId: "276569891504",
+            appId: "1:276569891504:web:39b1732b519f4d8b785175"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const storage = getStorage(app);
+
+        let currentProfessor = null;
+        let allVideos = [];
+        let professorSections = [];
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                try {
+                    const userRef = doc(db, 'users', user.uid);
+                    const userDoc = await getDoc(userRef);
+                    
+                    if (userDoc.exists()) {
+                        const userData = userDoc.data();
+                        if (userData.role !== 'professor' && userData.role !== 'professor') {
+                            alert('Unauthorized access');
+                            await signOut(auth);
+                            window.location.href = '/login/index.html';
+                            return;
+                        }
+                        
+                        currentProfessor = { id: user.uid, ...userData };
+                        await loadProfessorSections();
+                        await loadVideos();
+                        
+                        document.getElementById('loadingScreen').style.display = 'none';
+                        document.getElementById('mainContent').style.display = 'block';
+                    }
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Error loading page');
+                }
+            } else {
+                window.location.href = '/login/index.html';
+            }
+        });
+
+        async function loadProfessorSections() {
+            try {
+                const sectionsQuery = query(
+                    collection(db, 'sections'),
+                    where('professorId', '==', currentProfessor.id)
+                );
+                const sectionsSnapshot = await getDocs(sectionsQuery);
+                
+                professorSections = [];
+                sectionsSnapshot.forEach(doc => {
+                    professorSections.push({ id: doc.id, ...doc.data() });
+                });
+                
+                const sectionSelects = ['videoSection', 'sectionFilter'];
+                sectionSelects.forEach(selectId => {
+                    const select = document.getElementById(selectId);
+                    if (selectId === 'sectionFilter') {
+                        select.innerHTML = '<option value="">All Sections</option>';
+                    } else {
+                        select.innerHTML = '<option value="">Choose a section...</option>';
+                    }
+                    professorSections.forEach(section => {
+                        const option = document.createElement('option');
+                        option.value = section.id;
+                        option.textContent = section.name;
+                        select.appendChild(option);
+                    });
+                });
+            } catch (error) {
+                console.error('Error loading sections:', error);
+            }
+        }
+
+        async function loadVideos() {
+            try {
+                const videosQuery = query(
+                    collection(db, 'instructionVideos'),
+                    where('professorId', '==', currentProfessor.id)
+                );
+                
+                onSnapshot(videosQuery, (snapshot) => {
+                    allVideos = [];
+                    snapshot.forEach(doc => {
+                        allVideos.push({ id: doc.id, ...doc.data() });
+                    });
+                    displayVideos(allVideos);
+                });
+            } catch (error) {
+                console.error('Error loading videos:', error);
+            }
+        }
+
+        function displayVideos(videos) {
+            const container = document.getElementById('videosTableContainer');
+            
+            if (videos.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🎥</div>
+                        <div class="empty-title">No Videos Found</div>
+                        <div class="empty-text">Start by adding instruction videos for your fitness tests.</div>
+                    </div>
+                `;
+                return;
+            }
+            
+            let tableHTML = `
+                <div class="table-responsive">
+                    <table class="videos-table">
+                        <thead>
+                            <tr>
+                                <th>TITLE</th>
+                                <th>TEST</th>
+                                <th>SECTION</th>
+                                <th>VIDEO URL</th>
+                                <th>DATE ADDED</th>
+                                <th>ACTIONS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+            
+            videos.forEach(video => {
+                const section = professorSections.find(s => s.id === video.sectionId);
+                const sectionName = section ? section.name : 'N/A';
+                const dateAdded = video.createdAt ? new Date(video.createdAt.toDate()).toLocaleDateString() : 'N/A';
+                
+                tableHTML += `
+                    <tr>
+                        <td><strong>${video.title}</strong></td>
+                        <td><span class="badge badge-test">${video.test}</span></td>
+                        <td><span class="badge badge-section">${sectionName}</span></td>
+                        <td>
+                            <a href="${video.videoURL}" target="_blank" style="color: #3b82f6; text-decoration: none;">
+                                <i class="fas fa-play-circle"></i> Play Video
+                            </a>
+                        </td>
+                        <td>${dateAdded}</td>
+                        <td>
+                            <button class="action-btn btn-edit" onclick="editVideo('${video.id}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="action-btn btn-delete" onclick="deleteVideo('${video.id}', '${video.title}')">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            tableHTML += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+            
+            container.innerHTML = tableHTML;
+        }
+
+        window.filterVideos = function() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const testFilter = document.getElementById('testFilter').value;
+            const sectionFilter = document.getElementById('sectionFilter').value;
+            
+            let filtered = allVideos;
+            
+            if (searchTerm) {
+                filtered = filtered.filter(video => {
+                    const section = professorSections.find(s => s.id === video.sectionId);
+                    const sectionName = section ? section.name.toLowerCase() : '';
+                    return video.title.toLowerCase().includes(searchTerm) ||
+                           video.test.toLowerCase().includes(searchTerm) ||
+                           sectionName.includes(searchTerm);
+                });
+            }
+            
+            if (testFilter) {
+                filtered = filtered.filter(video => video.test === testFilter);
+            }
+            
+            if (sectionFilter) {
+                filtered = filtered.filter(video => video.sectionId === sectionFilter);
+            }
+            
+            displayVideos(filtered);
+        };
+
+        window.openAddVideoModal = function() {
+            document.getElementById('videoForm').reset();
+            document.getElementById('addVideoModal').classList.add('active');
+        };
+
+        window.closeAddVideoModal = function() {
+            document.getElementById('addVideoModal').classList.remove('active');
+        };
+
+        window.submitVideo = async function() {
+            const test = document.getElementById('videoTest').value;
+            const title = document.getElementById('videoTitle').value;
+            const sectionId = document.getElementById('videoSection').value;
+            const videoFile = document.getElementById('videoFile').files[0];
+            
+            if (!test || !title || !sectionId || !videoFile) {
+                alert('Please fill in all fields and select a video file');
+                return;
+            }
+            
+            // Check file size (100MB max)
+            const maxSize = 100 * 1024 * 1024; // 100MB in bytes
+            if (videoFile.size > maxSize) {
+                alert('Video file is too large. Maximum size is 100MB.');
+                return;
+            }
+            
+            // Check if it's a video file
+            if (!videoFile.type.startsWith('video/')) {
+                alert('Please select a valid video file');
+                return;
+            }
+            
+            try {
+                // Show progress
+                document.getElementById('uploadProgress').style.display = 'block';
+                const submitBtn = document.querySelector('.btn-submit');
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Uploading...';
+                
+                // Create storage reference
+                const timestamp = Date.now();
+                const fileName = `${currentProfessor.id}_${timestamp}_${videoFile.name}`;
+                const storageRef = ref(storage, `instructionVideos/${fileName}`);
+                
+                // Upload file
+                const uploadTask = uploadBytesResumable(storageRef, videoFile);
+                
+                uploadTask.on('state_changed',
+                    (snapshot) => {
+                        // Progress
+                        const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                        document.getElementById('progressBar').style.width = progress + '%';
+                        document.getElementById('progressText').textContent = `Uploading... ${Math.round(progress)}%`;
+                    },
+                    (error) => {
+                        // Error
+                        console.error('Upload error:', error);
+                        alert('Error uploading video. Please try again.');
+                        document.getElementById('uploadProgress').style.display = 'none';
+                        submitBtn.disabled = false;
+                        submitBtn.textContent = 'Add Video';
+                    },
+                    async () => {
+                        // Success
+                        try {
+                            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+                            
+                            // Save to Firestore
+                            await addDoc(collection(db, 'instructionVideos'), {
+                                professorId: currentProfessor.id,
+                                professorName: currentProfessor.name || currentProfessor.displayName,
+                                test: test,
+                                title: title,
+                                sectionId: sectionId,
+                                videoURL: downloadURL,
+                                fileName: fileName,
+                                fileSize: videoFile.size,
+                                fileType: videoFile.type,
+                                createdAt: Timestamp.now(),
+                                updatedAt: Timestamp.now()
+                            });
+                            
+                            alert('Video uploaded successfully!');
+                            closeAddVideoModal();
+                            document.getElementById('uploadProgress').style.display = 'none';
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'Add Video';
+                        } catch (error) {
+                            console.error('Error saving video data:', error);
+                            alert('Error saving video data. Please try again.');
+                            submitBtn.disabled = false;
+                            submitBtn.textContent = 'Add Video';
+                        }
+                    }
+                );
+                
+            } catch (error) {
+                console.error('Error uploading video:', error);
+                alert('Error uploading video. Please try again.');
+                document.getElementById('uploadProgress').style.display = 'none';
+                const submitBtn = document.querySelector('.btn-submit');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Add Video';
+            }
+        };
+
+        window.editVideo = async function(videoId) {
+            const video = allVideos.find(v => v.id === videoId);
+            if (!video) return;
+            
+            const newTitle = prompt('Enter new title:', video.title);
+            if (newTitle === null) return;
+            
+            if (!newTitle.trim()) {
+                alert('Title cannot be empty');
+                return;
+            }
+            
+            try {
+                await updateDoc(doc(db, 'instructionVideos', videoId), {
+                    title: newTitle.trim(),
+                    updatedAt: Timestamp.now()
+                });
+                
+                alert('Video updated successfully!');
+            } catch (error) {
+                console.error('Error updating video:', error);
+                alert('Error updating video. Please try again.');
+            }
+        };
+
+        window.deleteVideo = async function(videoId, title) {
+            if (!confirm(`Are you sure you want to delete "${title}"?\n\nThis action cannot be undone.`)) {
+                return;
+            }
+            
+            try {
+                const video = allVideos.find(v => v.id === videoId);
+                
+                // Delete file from storage if fileName exists
+                if (video && video.fileName) {
+                    try {
+                        const storageRef = ref(storage, `instructionVideos/${video.fileName}`);
+                        await deleteObject(storageRef);
+                    } catch (storageError) {
+                        console.error('Error deleting file from storage:', storageError);
+                        // Continue with Firestore deletion even if storage deletion fails
+                    }
+                }
+                
+                // Delete from Firestore
+                await deleteDoc(doc(db, 'instructionVideos', videoId));
+                alert('Video deleted successfully!');
+            } catch (error) {
+                console.error('Error deleting video:', error);
+                alert('Error deleting video. Please try again.');
+            }
+        };
+
+        window.handleLogout = async function() {
+            if (confirm('Are you sure you want to logout?')) {
+                try {
+                    await signOut(auth);
+                    window.location.href = '/login/index.html';
+                } catch (error) {
+                    console.error('Error logging out:', error);
+                    alert('Error logging out. Please try again.');
+                }
+            }
+        };
+
+        document.getElementById('addVideoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeAddVideoModal();
+            }
+        });
+    </script>
+</body>
+</html>

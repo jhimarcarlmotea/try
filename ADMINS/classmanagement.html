@@ -1,0 +1,2116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UMakFit - Class Management</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Manrope:600,800|Inter:300,500,400,700" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { -webkit-font-smoothing: antialiased; box-sizing: border-box; }
+        body { font-family: 'Inter', Helvetica, sans-serif; margin: 0; padding: 0; background-color: #f8fafc; }
+        
+        /* Header Styles */
+        .header-top { 
+            background-color: #ffffff; 
+            padding: 15px 0; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08); 
+            position: fixed; 
+            top: 0; 
+            width: 100%; 
+            z-index: 1000; 
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .header-top .container { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+        .logo-text { 
+            font-family: "Inter", Helvetica; 
+            font-weight: 700; 
+            color: #1e3a8a; 
+            font-size: 24px; 
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo-text i {
+            color: #f59e0b;
+            font-size: 26px;
+        }
+        .header-actions { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+        }
+        .logout-btn { 
+            padding: 8px 20px; 
+            background: linear-gradient(90deg, rgba(251, 191, 36, 1) 0%, rgba(245, 158, 11, 1) 100%); 
+            border: none; 
+            border-radius: 8px; 
+            color: #000; 
+            font-weight: 600; 
+            font-size: 14px; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            box-shadow: 0 2px 4px rgba(245, 158, 11, 0.3);
+        }
+        .logout-btn:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.4); 
+        }
+        .account-circle { 
+            width: 44px; 
+            height: 44px; 
+            cursor: pointer; 
+            border-radius: 50%;
+            border: 2px solid #e2e8f0;
+            transition: all 0.3s;
+        }
+        .account-circle:hover {
+            border-color: #f59e0b;
+        }
+        
+        /* Navigation Styles */
+        .nav-section { 
+            background: linear-gradient(180deg, rgba(30, 58, 138, 1) 0%, rgba(59, 130, 246, 1) 100%); 
+            padding: 20px 0; 
+            margin-top: 74px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .nav-brand { 
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-family: "Manrope", Helvetica; 
+            font-weight: 800; 
+            font-size: 28px; 
+            background: linear-gradient(90deg, rgba(245, 158, 11, 1) 0%, rgba(255, 229, 0, 1) 100%); 
+            -webkit-background-clip: text; 
+            background-clip: text; 
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+        .nav-brand-logo {
+            height: 100px;
+            width: auto;
+        }
+        .nav-pills-custom { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 8px; 
+            padding: 0; 
+            margin: 0;
+        }
+        .nav-pills-custom .nav-link { 
+            font-family: "Manrope", Helvetica; 
+            font-weight: 600; 
+            color: #000000; 
+            font-size: 14px; 
+            padding: 12px 18px;
+            border-radius: 8px; 
+            background-color: #ffffff; 
+            transition: all 0.3s; 
+            border: none; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .nav-pills-custom .nav-link.active { 
+            background: linear-gradient(90deg, rgba(251, 191, 36, 1) 0%, rgba(245, 158, 11, 1) 100%); 
+            box-shadow: 0 4px 8px rgba(245, 158, 11, 0.3);
+        }
+        .nav-pills-custom .nav-link:hover { 
+            transform: translateY(-2px); 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15); 
+        }
+        
+        /* Main Content */
+        .main-content { 
+            background: linear-gradient(180deg, rgba(248, 250, 252, 1) 0%, rgba(241, 245, 249, 1) 100%); 
+            padding: 40px 0 80px 0; 
+            min-height: calc(100vh - 200px); 
+        }
+        
+        /* Class Management Header */
+        .class-header { 
+            background: white; 
+            border-radius: 16px; 
+            padding: 30px; 
+            margin-bottom: 40px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
+            border: 1px solid #e2e8f0;
+        }
+        .class-header-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .class-icon {
+            width: 55px;
+            height: 55px;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+        }
+        .class-title {
+            font-family: "Inter", Helvetica; 
+            font-weight: 700; 
+            color: #1e3a8a; 
+            font-size: 32px; 
+            margin: 0;
+        }
+        .class-description {
+            font-family: "Inter", Helvetica; 
+            font-weight: 700; 
+            color: #1e3a8a; 
+            font-size: 16px; 
+            margin-top: 10px;
+            opacity: 0.8;
+        }
+        
+        /* Section Selector */
+        .section-selector {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+        }
+        .section-label {
+            font-family: "Inter", Helvetica;
+            font-weight: 600;
+            color: #1e3a8a;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+        .section-dropdown {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #11661e;
+            border-radius: 8px;
+            font-family: "Inter", Helvetica;
+            font-size: 16px;
+            background-color: white;
+        }
+        
+        /* Stats Cards */
+        .stats-row { 
+            margin-bottom: 40px; 
+        }
+        .stat-card { 
+            border-radius: 16px; 
+            padding: 25px; 
+            color: white; 
+            transition: all 0.3s; 
+            border: none;
+            height: 100%; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            transform: translate(30px, -30px);
+        }
+        .stat-card:hover { 
+            transform: translateY(-5px); 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15); 
+        }
+        .stat-card.purple { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+        .stat-card.blue { background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%); }
+        .stat-card.green { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+        .stat-card.orange { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
+        .stat-card.red { background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%); }
+        .stat-card.cyan { background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%); }
+        .stat-label { 
+            font-family: "Inter", Helvetica; 
+            font-weight: 600; 
+            font-size: 14px; 
+            margin-bottom: 10px; 
+            opacity: 0.95; 
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .stat-value { 
+            font-family: "Inter", Helvetica; 
+            font-weight: 800; 
+            font-size: 32px; 
+        }
+        
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        .action-btn {
+            padding: 12px 20px;
+            border-radius: 8px;
+            border: none;
+            font-family: "Inter", Helvetica;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .action-btn.primary {
+            background: linear-gradient(90deg, rgba(63, 167, 79, 1) 0%, rgba(17, 102, 30, 1) 100%);
+            color: white;
+        }
+        .action-btn.secondary {
+            background: linear-gradient(90deg, rgba(59, 130, 246, 1) 0%, rgba(30, 58, 138, 1) 100%);
+            color: white;
+        }
+        .action-btn.warning {
+            background: linear-gradient(90deg, rgba(245, 158, 11, 1) 0%, rgba(217, 119, 6, 1) 100%);
+            color: white;
+        }
+        .action-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .table-title {
+            font-family: "Inter", Helvetica;
+            font-weight: 700;
+            color: #1f2937;
+            font-size: 22px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .search-box {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+        .search-input {
+            padding: 10px 16px 10px 40px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-family: "Inter", Helvetica;
+            font-size: 14px;
+            width: 250px;
+        }
+        .search-icon {
+            position: absolute;
+            left: 12px;
+            color: #6b7280;
+        }
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .custom-table thead {
+            background: #f8fafc;
+        }
+        .custom-table th {
+            font-family: "Inter", Helvetica;
+            font-weight: 600;
+            color: #64748b;
+            font-size: 12px;
+            text-transform: uppercase;
+            padding: 14px 12px;
+            text-align: left;
+            border-bottom: 2px solid #e2e8f0;
+            letter-spacing: 0.5px;
+        }
+        .custom-table td {
+            font-family: "Inter", Helvetica;
+            font-weight: 500;
+            color: #475569;
+            font-size: 14px;
+            padding: 16px 12px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+        .custom-table tr:hover {
+            background-color: #f8fafc;
+        }
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-family: "Inter", Helvetica;
+            font-weight: 600;
+            font-size: 11px;
+            display: inline-block;
+        }
+        .status-completed {
+            background-color: #a4fbb1;
+            color: #000000;
+        }
+        .status-pending {
+            background-color: #ecfba4;
+            color: #000000;
+        }
+        .action-buttons-small {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-small {
+            padding: 6px 12px;
+            border: none;
+            border-radius: 4px;
+            font-family: "Inter", Helvetica;
+            font-weight: 600;
+            font-size: 11px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .btn-view {
+            background: #111b66;
+            color: white;
+        }
+        .btn-edit {
+            background: linear-gradient(180deg, rgba(245, 158, 11, 1) 0%, rgba(251, 191, 36, 1) 100%);
+            color: white;
+        }
+        .btn-small:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+        
+        /* Upcoming Tests */
+        .upcoming-test-card {
+            background: #f2f2f2;
+            border-radius: 5px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        .test-name {
+            font-family: "Inter", Helvetica;
+            font-weight: 400;
+            color: #000000;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+        .test-due {
+            font-family: "Inter", Helvetica;
+            font-weight: 400;
+            color: #00000080;
+            font-size: 10px;
+        }
+        
+        /* Analytics Section */
+        .analytics-section {
+            background: white;
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 4px rgba(0,0,0,0.08);
+            border: 1px solid #e2e8f0;
+            margin-bottom: 30px;
+        }
+        .analytics-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .analytics-title {
+            font-family: "Inter", Helvetica;
+            font-weight: 600;
+            color: #1e3a8a;
+            font-size: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .generate-report-btn {
+            padding: 8px 16px;
+            border-radius: 7px;
+            border: none;
+            background: linear-gradient(90deg, rgba(30, 58, 138, 1) 0%, rgba(59, 130, 246, 1) 100%);
+            color: white;
+            font-family: "Inter", Helvetica;
+            font-weight: 400;
+            font-size: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .chart-container {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+        .chart-card {
+            background-color: #f0f0f0;
+            border-radius: 5px;
+            padding: 15px;
+            height: 280px;
+            display: flex;
+            flex-direction: column;
+        }
+        .chart-title {
+            font-family: "Inter", Helvetica;
+            font-weight: 600;
+            color: #1e3a8a;
+            font-size: 13px;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .chart-placeholder {
+            flex: 1;
+            background: #d1d5db;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            font-size: 14px;
+        }
+        
+        /* Footer */
+        .footer { 
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%); 
+            padding: 40px 0; 
+            margin-top: 40px; 
+        }
+        .footer-title { 
+            font-family: "Inter", Helvetica; 
+            font-weight: 700; 
+            color: #f59e0b; 
+            font-size: 18px; 
+            text-align: center; 
+            margin-bottom: 20px; 
+        }
+        .footer-text { 
+            font-family: "Inter", Helvetica; 
+            font-weight: 400; 
+            color: #cbd5e1; 
+            font-size: 13px; 
+            line-height: 1.6; 
+        }
+        
+        /* Loading Screen */
+        .loading { 
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(255,255,255,0.95); 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 9999; 
+            flex-direction: column;
+            gap: 20px;
+        }
+        .loading-text {
+            font-family: "Inter", Helvetica;
+            font-weight: 500;
+            color: #475569;
+            font-size: 16px;
+        }
+        .spinner { 
+            border: 4px solid #f1f5f9; 
+            border-top: 4px solid #3b82f6; 
+            border-radius: 50%; 
+            width: 50px; 
+            height: 50px; 
+            animation: spin 1s linear infinite; 
+        }
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        #upcomingTests {
+    max-height: 300px;
+    overflow-y: auto;
+    padding-right: 5px;
+}
+
+/* Scrollbar styling */
+#upcomingTests::-webkit-scrollbar {
+    width: 6px;
+}
+
+#upcomingTests::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 3px;
+}
+
+#upcomingTests::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 3px;
+}
+
+#upcomingTests::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+/* Chart Styles */
+.chart-card {
+    background-color: white;
+    border-radius: 8px;
+    padding: 15px;
+    height: 280px;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    border: 1px solid #e2e8f0;
+}
+
+.chart-title {
+    font-family: "Inter", Helvetica;
+    font-weight: 600;
+    color: #1e3a8a;
+    font-size: 13px;
+    text-align: center;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #e2e8f0;
+}
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .nav-container {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .nav-pills-custom {
+                width: 100%;
+                justify-content: center;
+            }
+            .chart-container {
+                grid-template-columns: 1fr;
+            }
+        }
+        @media (max-width: 768px) {
+            .header-top .container { padding: 0 15px; }
+            .logo-text { font-size: 20px; }
+            .action-buttons {
+                flex-direction: column;
+            }
+            .action-btn {
+                width: 100%;
+                justify-content: center;
+            }
+            .table-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .search-input {
+                width: 100%;
+            }
+            .nav-pills-custom {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 5px;
+            }
+            .nav-brand-logo {
+                height: 50px;
+            }
+            .nav-brand {
+                font-size: 24px;
+            }
+            
+        }
+    </style>
+</head>
+<body>
+    <div id="loadingScreen" class="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading Class Management...</div>
+    </div>
+    <div id="classManagementContent" style="display: none;">
+        <div class="header-top">
+            <div class="container">
+                <div class="logo-text">
+                    <i class="fas fa-graduation-cap"></i>
+                    University of Makati
+                </div>
+                <div class="header-actions">
+                    <button class="logout-btn" onclick="handleLogout()">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
+                    <img class="account-circle" src="https://c.animaapp.com/tzMzyNnw/img/icon.svg" alt="Account">
+                </div>
+            </div>
+        </div>
+        <div class="nav-section">
+            <div class="container">
+                <div class="nav-container">
+                    <div class="nav-brand">
+                        <img src="logo.png" alt="UMakFit Logo" class="nav-brand-logo">
+                        UMakFit
+                    </div>
+                    <ul class="nav nav-pills-custom">
+                        <li class="nav-item">
+                            <a class="nav-link" href="professor.html">
+                                <i class="fas fa-tachometer-alt"></i> Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" href="#">
+                                <i class="fas fa-users"></i> Class Management
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="testmanagement.html">
+                                <i class="fas fa-calendar-alt"></i> Scheduling Test
+                            </a>
+                        </li>
+                       
+                        <li class="nav-item">
+                            <a class="nav-link" href="reportanalythics.html">
+                                <i class="fas fa-chart-bar"></i> Reports & Analytics
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="main-content">
+            <div class="container">
+                <!-- Class Header -->
+                <div class="class-header">
+                    <div class="class-header-content">
+                        <div class="class-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <h1 class="class-title">Class Management</h1>
+                            <p class="class-description">Manage student classes, create groups, and track fitness test progress</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Section Selector -->
+                <div class="section-selector">
+                    <div class="section-label">Select Section:</div>
+                    <select class="section-dropdown" id="sectionDropdown">
+                        <option value="">Loading sections...</option>
+                    </select>
+                </div>
+                
+                <!-- Stats Cards -->
+                <div class="row stats-row g-3">
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="stat-card purple">
+                            <div class="stat-label">
+                                <i class="fas fa-user-graduate"></i> Total Students
+                            </div>
+                            <div class="stat-value" id="statTotalStudents">0</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="stat-card blue">
+                            <div class="stat-label">
+                                <i class="fas fa-check-circle"></i> Test Completed
+                            </div>
+                            <div class="stat-value" id="statTestCompleted">0</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="stat-card green">
+                            <div class="stat-label">
+                                <i class="fas fa-clock"></i> Pending
+                            </div>
+                            <div class="stat-value" id="statPending">0</div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-sm-6 col-lg-3">
+                        <div class="stat-card orange">
+                            <div class="stat-label">
+                                <i class="fas fa-percentage"></i> Average Score
+                            </div>
+                            <div class="stat-value" id="statAverageScore">0%</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="action-btn primary" onclick="uploadStudentList()">
+                        <i class="fas fa-upload"></i> Upload Student List (CSV)
+                    </button>
+                </div>
+                
+                <div class="row">
+                    <div class="col-12 col-lg-8">
+                        <!-- Students Table -->
+                        <div class="table-container">
+                            <div class="table-header">
+                        <div class="table-title">
+                     <i class="fas fa-user-graduate"></i> Students
+                    </div>
+                         <div style="display: flex; gap: 10px; align-items: center;">
+                    <select class="section-dropdown" id="testFilterDropdown" style="width: 200px; padding: 10px 16px;">
+                     <option value="">All Students</option>
+                    </select>
+                    <div class="search-box">
+                     <i class="fas fa-search search-icon"></i>
+                        <input type="text" class="search-input" id="studentSearch" placeholder="Search Students by name, id">
+                </div>
+            </div>
+        </div>
+                            <div class="table-responsive">
+                                <table class="custom-table" id="studentsTable">
+                                    <thead>
+                                        <tr>
+                                            <th>Student ID</th>
+                                            <th>Name</th>
+                                            <th>Activity Name</th>
+                                            <th>Score</th>
+                                            <th>Date</th>
+                                            <th>Status</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="studentsTableBody">
+                                        <tr>
+                                            <td colspan="7" class="text-center py-4">Select a section to view students</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-12 col-lg-4">
+                        <!-- Upcoming Tests -->
+                        <div class="table-container">
+                            <div class="table-header">
+                                <div class="table-title">
+                                    <i class="fas fa-calendar-alt"></i> Upcoming Tests
+                                </div>
+                            </div>
+                            <div id="upcomingTests">
+                                <div class="upcoming-test-card">
+                                    <div class="test-name">Flexibility Assessment</div>
+                                    <div class="test-due">Due: Sept 30 2025</div>
+                                </div>
+                                <div class="upcoming-test-card">
+                                    <div class="test-name">Cardiovascular Endurance</div>
+                                    <div class="test-due">Due: Oct 5 2025</div>
+                                </div>
+                                <div class="upcoming-test-card">
+                                    <div class="test-name">Muscular Strength</div>
+                                    <div class="test-due">Due: Oct 10 2025</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Analytics Section -->
+<div class="analytics-section">
+    <div class="analytics-header">
+        <div class="analytics-title">
+            <i class="fas fa-chart-bar"></i> Data Visualizations & Analytics
+        </div>
+        <button class="generate-report-btn" onclick="generateReport()">
+            <i class="fas fa-download"></i> Generate Reports
+        </button>
+    </div>
+    <div class="chart-container">
+        <div class="chart-card">
+            <div class="chart-title">Test Completion Progress</div>
+            <canvas id="completionChart" style="width: 100%; height: 100%;"></canvas>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">Score Distribution</div>
+            <canvas id="scoreDistributionChart" style="width: 100%; height: 100%;"></canvas>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">Performance by Test Type</div>
+            <canvas id="testTypeChart" style="width: 100%; height: 100%;"></canvas>
+        </div>
+        <div class="chart-card">
+            <div class="chart-title">Monthly Activity</div>
+            <canvas id="monthlyActivityChart" style="width: 100%; height: 100%;"></canvas>
+        </div>
+    </div>
+</div>
+        <div class="footer">
+            <div class="container">
+                <div class="footer-title">About CTBL</div>
+                <div class="row g-4">
+                    <div class="col-12 col-md-4">
+                        <div class="footer-text">
+                            The Center for Technology Based Learning serves as the learning management system operating hub, 
+                            reporting to the university MANCOM officials, with a director on duty who manages and handles the 
+                            center's daily operations.
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="footer-text">
+                            Working closely with the Office of the President, the Center for Information Technology, and the 
+                            Deans and Directors to support the LMS end-users' day-to-day activity.
+                        </div>
+                    </div>
+                    <div class="col-12 col-md-4">
+                        <div class="footer-text">
+                            The center focuses on implementing new forms of training and determining the validity of data to 
+                            support the university's educational objectives.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script type="module">
+    // ✅ FIXED CLASS MANAGEMENT CODE - Shows ALL students with blank scores until they test
+    // Replace the entire <script type="module"> section in your classmanagement.html with this
+
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js';
+    import { getAuth, onAuthStateChanged, signOut } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js';
+    import { getFirestore, doc, getDoc, setDoc, collection, query, where, getDocs, addDoc, updateDoc } from 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js';
+
+    const firebaseConfig = {
+        apiKey: "AIzaSyAgaLunqEf2gs6dSpF_sz1hV5XQ5Wm52jo",
+        authDomain: "umakfit-e3b1d.firebaseapp.com",
+        projectId: "umakfit-e3b1d",
+        storageBucket: "umakfit-e3b1d.appspot.com",
+        messagingSenderId: "276569891504",
+        appId: "1:276569891504:web:39b1732b519f4d8b785175"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+
+    window.auth = auth;
+    window.db = db;
+    window.signOut = signOut;
+
+    let currentUser = null;
+    let currentSection = null;
+    let assignedSections = [];
+    let students = [];
+    let allTestResults = [];
+
+    // Load professor's assigned sections
+    async function loadSections() {
+        try {
+            console.log('=== LOADING PROFESSOR SECTIONS ===');
+            assignedSections = [];
+            
+            // Check professorProfiles collection
+            const profileRef = doc(db, 'professorProfiles', currentUser.email);
+            const profileDoc = await getDoc(profileRef);
+            
+            if (profileDoc.exists()) {
+                const profileData = profileDoc.data();
+                if (profileData.assignedClass) {
+                    assignedSections.push({
+                        id: profileData.assignedClass,
+                        name: profileData.assignedClass,
+                        professorEmail: currentUser.email
+                    });
+                }
+            }
+            
+            // Check sections collection by email
+            const sectionsByEmailQuery = query(
+                collection(db, 'sections'), 
+                where('professorEmail', '==', currentUser.email)
+            );
+            const sectionsByEmailSnapshot = await getDocs(sectionsByEmailQuery);
+            
+            sectionsByEmailSnapshot.forEach((doc) => {
+                const sectionData = doc.data();
+                if (!assignedSections.find(s => s.name === sectionData.name)) {
+                    assignedSections.push({
+                        id: doc.id,
+                        name: sectionData.name,
+                        ...sectionData
+                    });
+                }
+            });
+            
+            // Check sections collection by UID
+            const sectionsQuery = query(
+                collection(db, 'sections'), 
+                where('professorId', '==', currentUser.uid)
+            );
+            const sectionsSnapshot = await getDocs(sectionsQuery);
+            
+            sectionsSnapshot.forEach((doc) => {
+                const sectionData = doc.data();
+                if (!assignedSections.find(s => s.name === sectionData.name)) {
+                    assignedSections.push({
+                        id: doc.id,
+                        name: sectionData.name,
+                        ...sectionData
+                    });
+                }
+            });
+            
+            console.log('✅ Total assigned sections:', assignedSections.length);
+            updateSectionDropdown();
+            
+        } catch (error) {
+            console.error('❌ Error loading sections:', error);
+            document.getElementById('sectionDropdown').innerHTML = '<option value="">Error loading sections</option>';
+        }
+    }
+
+    function updateSectionDropdown() {
+        const dropdown = document.getElementById('sectionDropdown');
+        dropdown.innerHTML = '';
+        
+        if (assignedSections.length === 0) {
+            dropdown.innerHTML = '<option value="">No sections assigned</option>';
+            return;
+        }
+        
+        dropdown.innerHTML = '<option value="">Select a section</option>';
+        
+        assignedSections.forEach(section => {
+            const option = document.createElement('option');
+            option.value = section.name;
+            option.textContent = section.name;
+            dropdown.appendChild(option);
+        });
+        
+        if (assignedSections.length > 0) {
+            dropdown.value = assignedSections[0].name;
+            loadSectionData(assignedSections[0].name);
+        }
+    }
+
+   
+    async function loadSectionData(sectionName) {
+    currentSection = sectionName;
+    
+    try {
+        console.log('=== LOADING ALL STUDENTS FOR SECTION ===');
+        console.log('Selected section:', sectionName);
+        
+        // Clear previous data
+        students = [];
+        allTestResults = [];
+        
+        // ✅ Load ALL students from this section
+        const studentsQuery = query(
+            collection(db, 'students'), 
+            where('section', '==', sectionName)
+        );
+        
+        const studentsSnapshot = await getDocs(studentsQuery);
+        console.log('Found students:', studentsSnapshot.size);
+        
+        studentsSnapshot.forEach((doc) => {
+            const studentData = doc.data();
+            if (studentData.section === sectionName) {
+                // ✅ Initialize ALL students with blank/default values
+                students.push({
+                    id: doc.id,
+                    ...studentData,
+                    currentActivity: '-', // Default blank
+                    score: '-', // Default blank
+                    testDate: '-', // Default blank
+                    status: 'pending', // Default status
+                    result: '-'
+                });
+            }
+        });
+        
+        console.log('✅ Total students loaded:', students.length);
+        
+        // ✅ Load ALL test results for this section
+        await loadAllTestResults(sectionName);
+        
+        // Update UI with all students
+        updateStudentsTable();
+        updateSectionStats();
+        await loadTestsForSection(sectionName);
+        await loadUpcomingTests(sectionName);
+        
+        // ✅ Update charts with new data
+        updateChartsWithData();
+        
+    } catch (error) {
+        console.error('❌ Error loading section data:', error);
+        students = [];
+        updateStudentsTable();
+    }
+}
+
+    // ✅ NEW: Load ALL test results for the section
+    async function loadAllTestResults(sectionName) {
+        try {
+            console.log('=== LOADING ALL TEST RESULTS FOR SECTION ===');
+            
+            const resultsQuery = query(
+                collection(db, 'testResults'),
+                where('section', '==', sectionName)
+            );
+            
+            const resultsSnapshot = await getDocs(resultsQuery);
+            console.log('Found test results:', resultsSnapshot.size);
+            
+            resultsSnapshot.forEach((doc) => {
+                const result = doc.data();
+                allTestResults.push({
+                    id: doc.id,
+                    ...result
+                });
+                
+                // ✅ Update student data if they have test results
+                const studentIndex = students.findIndex(s => 
+                    s.id === result.studentId || s.email === result.studentEmail
+                );
+                
+                if (studentIndex !== -1) {
+                    const calculatedScore = result.score || calculateTestScore(
+                        result.testName, 
+                        result.result, 
+                        result.testTarget
+                    );
+                    
+                    students[studentIndex] = {
+                        ...students[studentIndex],
+                        currentActivity: result.testName || students[studentIndex].currentActivity,
+                        score: calculatedScore,
+                        testDate: result.submittedAt ? new Date(result.submittedAt).toLocaleDateString() : 
+                                 (result.date ? new Date(result.date).toLocaleDateString() : '-'),
+                        status: 'completed',
+                        result: result.result,
+                        attemptNumber: result.attemptNumber,
+                        attemptsAllowed: result.attemptsAllowed
+                    };
+                }
+            });
+            
+            console.log('✅ Test results processed. Students with completed tests:', 
+                students.filter(s => s.status === 'completed').length);
+            
+        } catch (error) {
+            console.error('Error loading test results:', error);
+        }
+    }
+
+    async function loadTestsForSection(sectionName) {
+    try {
+        const testFilterDropdown = document.getElementById('testFilterDropdown');
+        
+        // ✅ KEEP ALL TEST OPTIONS in dropdown
+        testFilterDropdown.innerHTML = `
+            <option value="">All Students</option>
+            <option value="Push-Up Test">Push-Up Test</option>
+            <option value="Sit-and-Reach">Sit-and-Reach</option>
+            <option value="Plank Hold">Plank Hold</option>
+            <option value="3-Minute Step Test">3-Minute Step Test</option>
+            <option value="BMI Assessment">BMI Assessment</option>
+        `;
+        
+        // Also load scheduled tests for this section to add any additional tests
+        const testsQuery = query(
+            collection(db, 'scheduledTests'),
+            where('section', '==', sectionName)
+        );
+        
+        const testsSnapshot = await getDocs(testsQuery);
+        
+        if (!testsSnapshot.empty) {
+            const addedTests = new Set(['Push-Up Test', 'Sit-and-Reach', 'Plank Hold', '3-Minute Step Test', 'BMI Assessment']);
+            
+            testsSnapshot.forEach((doc) => {
+                const test = doc.data();
+                const testName = test.testName || test.name;
+                
+                // Add test if not already in dropdown
+                if (testName && !addedTests.has(testName)) {
+                    const option = document.createElement('option');
+                    option.value = testName;
+                    option.textContent = `${testName} (${test.date})`;
+                    testFilterDropdown.appendChild(option);
+                    addedTests.add(testName);
+                }
+            });
+            console.log('✓ Loaded scheduled tests for filtering');
+        }
+        
+    } catch (error) {
+        console.error('Error loading tests for section:', error);
+    }
+}
+    async function loadUpcomingTests(sectionName) {
+    try {
+        if (!sectionName) {
+            console.log('No section selected, skipping upcoming tests load');
+            return;
+        }
+        
+        console.log('=== LOADING UPCOMING TESTS FROM SCHEDULED TESTS ===');
+        console.log('Section:', sectionName);
+        
+        const upcomingTestsDiv = document.getElementById('upcomingTests');
+        const currentDate = new Date();
+        currentDate.setHours(0, 0, 0, 0); // Start of today
+        
+        console.log('Current date:', currentDate);
+        
+        // Query scheduled tests for this section that are not expired
+        const testsQuery = query(
+            collection(db, 'scheduledTests'),
+            where('section', '==', sectionName)
+        );
+        
+        const testsSnapshot = await getDocs(testsQuery);
+        console.log('Total scheduled tests found:', testsSnapshot.size);
+        
+        const upcomingTests = [];
+        
+        testsSnapshot.forEach((doc) => {
+            const test = doc.data();
+            
+            console.log('Processing test:', test.testName, 'Deadline:', test.deadlineDateTime);
+            
+            // Parse deadline date
+            let deadlineDate;
+            
+            if (test.deadlineDateTime) {
+                deadlineDate = new Date(test.deadlineDateTime);
+                console.log('Using deadlineDateTime:', test.deadlineDateTime);
+            } else if (test.deadline && test.deadlineTime) {
+                deadlineDate = new Date(`${test.deadline}T${test.deadlineTime}`);
+                console.log('Using deadline + time:', test.deadline, test.deadlineTime);
+            } else if (test.deadline) {
+                deadlineDate = new Date(test.deadline);
+                deadlineDate.setHours(23, 59, 59, 999);
+                console.log('Using deadline only:', test.deadline);
+            } else if (test.date) {
+                deadlineDate = new Date(test.date);
+                deadlineDate.setHours(23, 59, 59, 999);
+                console.log('Using test date:', test.date);
+            }
+            
+            // Only include tests that haven't passed their deadline
+            if (deadlineDate && deadlineDate > currentDate) {
+                upcomingTests.push({
+                    id: doc.id,
+                    name: test.testName || test.name || 'Fitness Test',
+                    deadline: deadlineDate,
+                    deadlineTime: test.deadlineTime || '',
+                    attemptsAllowed: test.attemptsAllowed || 1,
+                    status: test.status || 'scheduled',
+                    ...test
+                });
+                console.log('✓✓ Added to upcoming:', test.testName, 'Deadline:', deadlineDate);
+            } else {
+                console.log('✗ Test expired or invalid date:', test.testName);
+            }
+        });
+        
+        console.log('✅ Total upcoming tests for', sectionName, ':', upcomingTests.length);
+        
+        // Sort by deadline (earliest first)
+        upcomingTests.sort((a, b) => a.deadline - b.deadline);
+        
+        // Take only the next 3 upcoming tests
+        const nextThreeTests = upcomingTests.slice(0, 3);
+        
+        // Update UI
+        if (nextThreeTests.length === 0) {
+            upcomingTestsDiv.innerHTML = `
+                <div class="upcoming-test-card" style="text-align: center; padding: 30px;">
+                    <i class="fas fa-calendar-check" style="font-size: 36px; color: #cbd5e1; margin-bottom: 10px;"></i>
+                    <div class="test-name" style="color: #64748b;">No upcoming tests</div>
+                    <div class="test-due" style="color: #94a3b8;">Schedule a test for ${sectionName}</div>
+                </div>
+            `;
+        } else {
+            let testsHTML = '';
+            nextThreeTests.forEach(test => {
+                const formattedDate = formatTestDate(test.deadline);
+                const timeDisplay = test.deadlineTime ? ` ${test.deadlineTime}` : '';
+                
+                // Add status indicator
+                let statusIcon = '';
+                if (test.status === 'active') {
+                    statusIcon = '<i class="fas fa-play-circle" style="color: #10b981; margin-right: 5px;"></i>';
+                } else if (test.status === 'scheduled') {
+                    statusIcon = '<i class="fas fa-clock" style="color: #f59e0b; margin-right: 5px;"></i>';
+                }
+                
+                testsHTML += `
+                    <div class="upcoming-test-card">
+                        <div class="test-name">
+                            ${statusIcon}${test.name}
+                        </div>
+                        <div class="test-due">
+                            Due: ${formattedDate}${timeDisplay}
+                        </div>
+                        <div class="test-due" style="margin-top: 3px; color: #94a3b8;">
+                            <i class="fas fa-redo" style="font-size: 9px;"></i> ${test.attemptsAllowed} attempt(s) allowed
+                        </div>
+                    </div>
+                `;
+            });
+            upcomingTestsDiv.innerHTML = testsHTML;
+        }
+        
+        // Add scrollable container if there are tests
+        if (nextThreeTests.length > 0) {
+            upcomingTestsDiv.style.maxHeight = '300px';
+            upcomingTestsDiv.style.overflowY = 'auto';
+            upcomingTestsDiv.style.paddingRight = '5px';
+        }
+        
+        console.log('✅ Upcoming tests UI updated with', nextThreeTests.length, 'tests');
+        
+    } catch (error) {
+    console.error('❌ Error loading upcoming tests:', error);
+    console.error('Error details:', error.message);
+    
+    const upcomingTestsDiv = document.getElementById('upcomingTests');
+    upcomingTestsDiv.innerHTML = `
+        <div class="upcoming-test-card" style="text-align: center; padding: 20px;">
+            <i class="fas fa-exclamation-triangle" style="font-size: 32px; color: #ef4444; margin-bottom: 8px;"></i>
+            <div class="test-name" style="color: #ef4444; font-size: 13px;">Error loading tests</div>
+            <div class="test-due" style="font-size: 11px;">${error.message}</div>
+            <div class="test-due" style="font-size: 10px; margin-top: 8px; color: #64748b;">Check console for details</div>
+        </div>
+    `;
+}
+}
+   function formatTestDate(date) {
+    // Ensure date is a Date object
+    if (!(date instanceof Date)) {
+        date = new Date(date);
+    }
+    
+    // Check if date is valid
+    if (isNaN(date.getTime())) {
+        return 'Invalid Date';
+    }
+    
+    const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    const month = months[date.getMonth()];
+    const day = date.getDate();
+    const year = date.getFullYear();
+    return `${month} ${day}, ${year}`;
+}
+    // Chart instances
+let completionChart, scoreDistributionChart, testTypeChart, monthlyActivityChart;
+
+// ✅ Initialize Charts
+function initializeCharts() {
+    // Destroy existing charts if they exist
+    if (completionChart) completionChart.destroy();
+    if (scoreDistributionChart) scoreDistributionChart.destroy();
+    if (testTypeChart) testTypeChart.destroy();
+    if (monthlyActivityChart) monthlyActivityChart.destroy();
+
+    // Create placeholder charts
+    createPlaceholderCharts();
+}
+
+// ✅ Create placeholder charts
+function createPlaceholderCharts() {
+    const ctx1 = document.getElementById('completionChart').getContext('2d');
+    const ctx2 = document.getElementById('scoreDistributionChart').getContext('2d');
+    const ctx3 = document.getElementById('testTypeChart').getContext('2d');
+    const ctx4 = document.getElementById('monthlyActivityChart').getContext('2d');
+
+    // Placeholder data
+    const placeholderData = [50, 50];
+    const placeholderLabels = ['No Data', 'Available'];
+
+    completionChart = new Chart(ctx1, {
+        type: 'doughnut',
+        data: {
+            labels: placeholderLabels,
+            datasets: [{
+                data: placeholderData,
+                backgroundColor: ['#e2e8f0', '#cbd5e1'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { display: false },
+                title: { display: false }
+            }
+        }
+    });
+
+    scoreDistributionChart = new Chart(ctx2, {
+        type: 'bar',
+        data: {
+            labels: ['No Data'],
+            datasets: [{
+                label: 'Students',
+                data: [0],
+                backgroundColor: '#e2e8f0'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+
+    testTypeChart = new Chart(ctx3, {
+        type: 'pie',
+        data: {
+            labels: placeholderLabels,
+            datasets: [{
+                data: placeholderData,
+                backgroundColor: ['#e2e8f0', '#cbd5e1']
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false
+        }
+    });
+
+    monthlyActivityChart = new Chart(ctx4, {
+        type: 'line',
+        data: {
+            labels: ['No Data'],
+            datasets: [{
+                label: 'Tests',
+                data: [0],
+                borderColor: '#e2e8f0',
+                backgroundColor: 'rgba(226, 232, 240, 0.1)',
+                fill: true
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+}
+
+// ✅ Update charts with real data
+function updateChartsWithData() {
+    if (!currentSection || students.length === 0) {
+        return;
+    }
+
+    // Calculate data for charts
+    const completionData = calculateCompletionData();
+    const scoreDistributionData = calculateScoreDistribution();
+    const testTypeData = calculateTestTypeData();
+    const monthlyActivityData = calculateMonthlyActivity();
+
+    // Update charts
+    updateCompletionChart(completionData);
+    updateScoreDistributionChart(scoreDistributionData);
+    updateTestTypeChart(testTypeData);
+    updateMonthlyActivityChart(monthlyActivityData);
+}
+
+// ✅ Calculate completion data
+function calculateCompletionData() {
+    const totalStudents = students.length;
+    const completedStudents = students.filter(s => s.status === 'completed').length;
+    const pendingStudents = totalStudents - completedStudents;
+    
+    return {
+        completed: completedStudents,
+        pending: pendingStudents,
+        total: totalStudents,
+        completionRate: totalStudents > 0 ? Math.round((completedStudents / totalStudents) * 100) : 0
+    };
+}
+
+// ✅ Calculate score distribution
+function calculateScoreDistribution() {
+    const scoreRanges = {
+        excellent: 0, // 90-100
+        good: 0,      // 80-89
+        fair: 0,      // 70-79
+        needsImprovement: 0 // below 70
+    };
+
+    students.forEach(student => {
+        if (student.status === 'completed' && student.score !== '-') {
+            const score = parseInt(student.score);
+            if (score >= 90) scoreRanges.excellent++;
+            else if (score >= 80) scoreRanges.good++;
+            else if (score >= 70) scoreRanges.fair++;
+            else scoreRanges.needsImprovement++;
+        }
+    });
+
+    return scoreRanges;
+}
+
+// ✅ Calculate test type data
+function calculateTestTypeData() {
+    const testTypes = {};
+    
+    allTestResults.forEach(result => {
+        const testName = result.testName || 'Unknown Test';
+        testTypes[testName] = (testTypes[testName] || 0) + 1;
+    });
+
+    return testTypes;
+}
+
+// ✅ Calculate monthly activity
+function calculateMonthlyActivity() {
+    const monthlyData = {};
+    const last6Months = getLast6Months();
+    
+    // Initialize with zeros
+    last6Months.forEach(month => {
+        monthlyData[month] = 0;
+    });
+
+    // Count tests per month
+    allTestResults.forEach(result => {
+        if (result.submittedAt) {
+            const date = new Date(result.submittedAt);
+            const monthKey = `${date.getFullYear()}-${(date.getMonth() + 1).toString().padStart(2, '0')}`;
+            if (monthlyData[monthKey] !== undefined) {
+                monthlyData[monthKey]++;
+            }
+        }
+    });
+
+    return {
+        labels: last6Months.map(month => formatMonthLabel(month)),
+        data: last6Months.map(month => monthlyData[month])
+    };
+}
+
+// ✅ Helper function to get last 6 months
+function getLast6Months() {
+    const months = [];
+    const today = new Date();
+    
+    for (let i = 5; i >= 0; i--) {
+        const date = new Date(today.getFullYear(), today.getMonth() - i, 1);
+        const year = date.getFullYear();
+        const month = (date.getMonth() + 1).toString().padStart(2, '0');
+        months.push(`${year}-${month}`);
+    }
+    
+    return months;
+}
+
+// ✅ Helper function to format month labels
+function formatMonthLabel(monthKey) {
+    const [year, month] = monthKey.split('-');
+    const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+    return `${monthNames[parseInt(month) - 1]} ${year}`;
+}
+
+// ✅ Update individual charts
+function updateCompletionChart(data) {
+    completionChart.data.labels = ['Completed', 'Pending'];
+    completionChart.data.datasets[0].data = [data.completed, data.pending];
+    completionChart.data.datasets[0].backgroundColor = ['#10b981', '#f59e0b'];
+    completionChart.update();
+}
+
+function updateScoreDistributionChart(data) {
+    scoreDistributionChart.data.labels = ['Excellent (90-100)', 'Good (80-89)', 'Fair (70-79)', 'Needs Improvement (<70)'];
+    scoreDistributionChart.data.datasets[0].data = [
+        data.excellent,
+        data.good,
+        data.fair,
+        data.needsImprovement
+    ];
+    scoreDistributionChart.data.datasets[0].backgroundColor = ['#10b981', '#3b82f6', '#f59e0b', '#ef4444'];
+    scoreDistributionChart.update();
+}
+
+function updateTestTypeChart(data) {
+    const testNames = Object.keys(data);
+    const testCounts = Object.values(data);
+    
+    if (testNames.length === 0) {
+        testNames.push('No Tests');
+        testCounts.push(1);
+    }
+
+    testTypeChart.data.labels = testNames;
+    testTypeChart.data.datasets[0].data = testCounts;
+    testTypeChart.data.datasets[0].backgroundColor = ['#3b82f6', '#ef4444', '#10b981', '#f59e0b', '#8b5cf6', '#06b6d4'];
+    testTypeChart.update();
+}
+
+function updateMonthlyActivityChart(data) {
+    monthlyActivityChart.data.labels = data.labels;
+    monthlyActivityChart.data.datasets[0].data = data.data;
+    monthlyActivityChart.data.datasets[0].borderColor = '#3b82f6';
+    monthlyActivityChart.data.datasets[0].backgroundColor = 'rgba(59, 130, 246, 0.1)';
+    monthlyActivityChart.update();
+}
+    async function filterStudentsByTest(testName) {
+    console.log('🔍 === FILTER BY TEST CALLED ===');
+    console.log('Test Name:', testName);
+    
+    if (!testName) {
+        // Show all students when "All Students" is selected
+        updateStudentsTable();
+        updateSectionStats();
+        return;
+    }
+    
+    try {
+        // Check if this test is actually scheduled for the current section
+        const testsQuery = query(
+            collection(db, 'scheduledTests'),
+            where('section', '==', currentSection),
+            where('testName', '==', testName)
+        );
+        
+        const testsSnapshot = await getDocs(testsQuery);
+        
+        if (testsSnapshot.empty) {
+            // ✅ Test is NOT scheduled - show EMPTY MESSAGE but keep the test in dropdown
+            const tableBody = document.getElementById('studentsTableBody');
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-center py-5">
+                        <div class="text-muted">
+                            <i class="fas fa-calendar-times" style="font-size: 48px; display: block; margin-bottom: 10px; opacity: 0.5;"></i>
+                            <p style="font-size: 16px; font-weight: 600;">"${testName}" is not scheduled yet</p>
+                            <small>No students to display. This test has not been scheduled for ${currentSection} section.</small>
+                            <br>
+                            <small>Schedule this test in the Test Management page to see student results here.</small>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            
+            // Reset stats
+            document.getElementById('statTotalStudents').textContent = '0';
+            document.getElementById('statTestCompleted').textContent = '0';
+            document.getElementById('statPending').textContent = '0';
+            document.getElementById('statAverageScore').textContent = '0%';
+            return;
+        }
+        
+        // ✅ Test IS scheduled - show ALL students with their results/status for this test
+        console.log('Test is scheduled, showing students...');
+        
+        const filteredStudents = [];
+        
+        // Get test results for this specific test
+        const testResultsForThisTest = allTestResults.filter(result => {
+            const resultTestName = result.testName || result.name || '';
+            return resultTestName === testName;
+        });
+        
+        console.log(`Found ${testResultsForThisTest.length} results for test: ${testName}`);
+        
+        // ✅ Create entries for ALL students in the section
+        students.forEach(student => {
+            const studentResult = testResultsForThisTest.find(result => 
+                result.studentId === student.id || result.studentEmail === student.email
+            );
+            
+            if (studentResult) {
+                // Student has taken this test
+                const calculatedScore = studentResult.score || calculateTestScore(testName, studentResult.result, studentResult.testTarget);
+                
+                filteredStudents.push({
+                    ...student,
+                    currentActivity: testName,
+                    score: calculatedScore,
+                    testDate: studentResult.submittedAt ? new Date(studentResult.submittedAt).toLocaleDateString() : 
+                             (studentResult.date ? new Date(studentResult.date).toLocaleDateString() : '-'),
+                    status: 'completed',
+                    result: studentResult.result,
+                    attemptNumber: studentResult.attemptNumber,
+                    attemptsAllowed: studentResult.attemptsAllowed
+                });
+            } else {
+                // Student hasn't taken this test yet - show with blank scores
+                filteredStudents.push({
+                    ...student,
+                    currentActivity: testName,
+                    score: '-',
+                    testDate: '-',
+                    status: 'pending',
+                    result: '-'
+                });
+            }
+        });
+        
+        console.log(`✓ Showing ${filteredStudents.length} students for scheduled test "${testName}"`);
+        
+        // Update table with students for this scheduled test
+        updateFilteredStudentsTable(filteredStudents);
+        updateFilteredStats(filteredStudents);
+        
+    } catch (error) {
+        console.error('Error filtering students by test:', error);
+        alert('Error filtering students: ' + error.message);
+    }
+}
+
+
+    function calculateTestScore(testName, result, testTarget = null) {
+        const normalized = testName.toLowerCase();
+        
+        if (testTarget && testTarget > 0) {
+            const value = parseFloat(result);
+            
+            if (normalized.includes('push-up') || normalized.includes('pushup')) {
+                const reps = parseInt(result);
+                if (reps >= testTarget) return 100;
+                return Math.max(50, Math.round((reps / testTarget) * 100));
+            } else if (normalized.includes('plank')) {
+                const seconds = parseInt(result.split(':')[1] || result);
+                if (seconds >= testTarget) return 100;
+                return Math.max(50, Math.round((seconds / testTarget) * 100));
+            } else if (normalized.includes('sit-and-reach')) {
+                const distance = parseFloat(result);
+                if (distance >= testTarget) return 100;
+                return Math.max(50, Math.round((distance / testTarget) * 100));
+            }
+        }
+        
+        // Fallback scoring
+        if (normalized.includes('push-up')) {
+            const reps = parseInt(result);
+            if (reps >= 40) return 100;
+            if (reps >= 30) return 90;
+            if (reps >= 20) return 80;
+            return 70;
+        } else if (normalized.includes('plank')) {
+            const seconds = parseInt(result.split(':')[1] || result);
+            if (seconds >= 120) return 100;
+            if (seconds >= 90) return 90;
+            if (seconds >= 60) return 80;
+            return 70;
+        }
+        
+        return 75;
+    }
+
+    // ✅ FIXED: Update students table to show ALL students with appropriate status
+    function updateStudentsTable() {
+        const tableBody = document.getElementById('studentsTableBody');
+        
+        if (students.length === 0) {
+            tableBody.innerHTML = `
+                <tr>
+                    <td colspan="7" class="text-center py-5">
+                        <div class="text-muted">
+                            <i class="fas fa-inbox" style="font-size: 48px; display: block; margin-bottom: 10px; opacity: 0.5;"></i>
+                            <p style="font-size: 16px; font-weight: 600;">No students found in this section</p>
+                            <small>Students will appear here when they are added to this section</small>
+                        </div>
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+        
+        let tableHTML = '';
+        students.forEach(student => {
+            const fullName = `${student.lastName || ''}, ${student.firstName || ''}`.trim();
+            const studentId = student.umakId || student.studentId || student.id;
+            
+            // ✅ Determine status badge based on whether student has completed any test
+            const statusClass = student.status === 'completed' ? 'status-completed' : 'status-pending';
+            const statusText = student.status === 'completed' ? 'completed' : 'pending';
+            
+            tableHTML += `
+                <tr>
+                    <td>${studentId}</td>
+                    <td>${fullName || 'N/A'}</td>
+                    <td>${student.currentActivity || '-'}</td>
+                    <td>${student.score || '-'}</td>
+                    <td>${student.testDate || '-'}</td>
+                    <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                    <td>
+                        <div class="action-buttons-small">
+                            <button class="btn-small btn-view" onclick="viewStudent('${student.id}')">View</button>
+                            <button class="btn-small btn-edit" onclick="editStudent('${student.id}')">Edit</button>
+                        </div>
+                    </td>
+                </tr>
+            `;
+        });
+        
+        tableBody.innerHTML = tableHTML;
+        console.log('✅ Table updated with', students.length, 'students');
+    }
+
+    function updateFilteredStudentsTable(filteredStudents) {
+    const tableBody = document.getElementById('studentsTableBody');
+    
+    if (filteredStudents.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="7" class="text-center py-5">
+                    <div class="text-muted">
+                        <i class="fas fa-users" style="font-size: 48px; display: block; margin-bottom: 10px; opacity: 0.5;"></i>
+                        <p style="font-size: 16px; font-weight: 600;">No students in this section</p>
+                        <small>Students will appear here when added to the section</small>
+                    </div>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+    
+    let tableHTML = '';
+    filteredStudents.forEach(student => {
+        const fullName = `${student.lastName || ''}, ${student.firstName || ''}`.trim();
+        const studentId = student.umakId || student.studentId || student.id;
+        const attemptInfo = student.attemptNumber ? ` (Attempt ${student.attemptNumber}/${student.attemptsAllowed})` : '';
+        
+        const isCompleted = student.status === 'completed';
+        const scoreStyle = isCompleted ? 'style="color: #10b981; font-size: 16px; font-weight: bold;"' : 'style="color: #6b7280;"';
+        const activityStyle = isCompleted ? 'style="color: #3b82f6;"' : 'style="color: #6b7280;"';
+        const statusClass = isCompleted ? 'status-completed' : 'status-pending';
+        const statusText = isCompleted ? 'completed' : 'pending';
+        
+        tableHTML += `
+            <tr>
+                <td>${studentId}</td>
+                <td>${fullName || 'N/A'}</td>
+                <td>
+                    <strong ${activityStyle}>${student.currentActivity || 'N/A'}</strong>
+                    ${attemptInfo ? `<br><small style="color: #64748b;">${attemptInfo}</small>` : ''}
+                </td>
+                <td><strong ${scoreStyle}>${student.score || '-'}</strong></td>
+                <td>${student.testDate || '-'}</td>
+                <td><span class="status-badge ${statusClass}">${statusText}</span></td>
+                <td>
+                    <div class="action-buttons-small">
+                        ${isCompleted ? 
+                            `<button class="btn-small btn-view" onclick="viewStudentResult('${student.id}', '${student.currentActivity || 'N/A'}', '${student.result || 'N/A'}', '${student.score || 'N/A'}')">View</button>` :
+                            `<button class="btn-small btn-view" onclick="viewStudent('${student.id}')">View</button>`
+                        }
+                        <button class="btn-small btn-edit" onclick="editStudent('${student.id}')">Edit</button>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+    
+    tableBody.innerHTML = tableHTML;
+    console.log('✅ Filtered table updated with', filteredStudents.length, 'students for the scheduled test');
+}
+
+    // Update section statistics
+    function updateSectionStats() {
+        if (students.length === 0) {
+            document.getElementById('statTotalStudents').textContent = '0';
+            document.getElementById('statTestCompleted').textContent = '0';
+            document.getElementById('statPending').textContent = '0';
+            document.getElementById('statAverageScore').textContent = '0%';
+            return;
+        }
+        
+        const totalStudents = students.length;
+        const completedTests = students.filter(s => s.status === 'completed').length;
+        const pendingTests = totalStudents - completedTests;
+        
+        let totalScore = 0;
+        let scoredTests = 0;
+        
+        students.forEach(student => {
+            if (student.score && student.score !== '-' && student.status === 'completed') {
+                const score = parseInt(student.score);
+                if (!isNaN(score)) {
+                    totalScore += score;
+                    scoredTests++;
+                }
+            }
+        });
+        
+        const averageScore = scoredTests > 0 ? Math.round(totalScore / scoredTests) : 0;
+        
+        document.getElementById('statTotalStudents').textContent = totalStudents;
+        document.getElementById('statTestCompleted').textContent = completedTests;
+        document.getElementById('statPending').textContent = pendingTests;
+        document.getElementById('statAverageScore').textContent = `${averageScore}%`;
+    }
+
+    // ✅ NEW: Update stats for filtered view
+    function updateFilteredStats(filteredStudents) {
+        const totalStudents = filteredStudents.length;
+        const completedTests = filteredStudents.filter(s => s.status === 'completed').length;
+        const pendingTests = totalStudents - completedTests;
+        
+        let totalScore = 0;
+        let scoredTests = 0;
+        
+        filteredStudents.forEach(student => {
+            if (student.score && student.score !== '-' && student.status === 'completed') {
+                const score = parseInt(student.score);
+                if (!isNaN(score)) {
+                    totalScore += score;
+                    scoredTests++;
+                }
+            }
+        });
+        
+        const averageScore = scoredTests > 0 ? Math.round(totalScore / scoredTests) : 0;
+        
+        document.getElementById('statTotalStudents').textContent = totalStudents;
+        document.getElementById('statTestCompleted').textContent = completedTests;
+        document.getElementById('statPending').textContent = pendingTests;
+        document.getElementById('statAverageScore').textContent = `${averageScore}%`;
+    }
+
+    // Search functionality
+    document.getElementById('studentSearch').addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        const selectedTest = document.getElementById('testFilterDropdown').value;
+        
+        if (!searchTerm) {
+            if (selectedTest) {
+                filterStudentsByTest(selectedTest);
+            } else {
+                updateStudentsTable();
+            }
+            return;
+        }
+        
+        let studentsToSearch = students;
+        
+        if (selectedTest) {
+            return;
+        }
+        
+        const filteredStudents = studentsToSearch.filter(student => {
+            const firstName = (student.firstName || '').toLowerCase();
+            const lastName = (student.lastName || '').toLowerCase();
+            const studentId = (student.umakId || student.studentId || student.id || '').toLowerCase();
+            const email = (student.email || '').toLowerCase();
+            
+            return firstName.includes(searchTerm) || 
+                   lastName.includes(searchTerm) || 
+                   studentId.includes(searchTerm) ||
+                   email.includes(searchTerm);
+        });
+        
+        updateFilteredStudentsTable(filteredStudents);
+    });
+
+    // Event listeners
+    document.getElementById('sectionDropdown').addEventListener('change', function() {
+        if (this.value) {
+            console.log('Section changed to:', this.value);
+            loadSectionData(this.value);
+        } else {
+            students = [];
+            updateStudentsTable();
+            updateSectionStats();
+        }
+    });
+
+    document.getElementById('testFilterDropdown').addEventListener('change', function() {
+        filterStudentsByTest(this.value);
+    });
+
+    // Window functions
+    window.viewStudent = function(studentId) {
+        const student = students.find(s => s.id === studentId);
+        if (student) {
+            const fullName = `${student.firstName || ''} ${student.lastName || ''}`.trim();
+            alert(`Viewing student:\n\nName: ${fullName}\nStudent ID: ${student.umakId || student.studentId}\nEmail: ${student.email}\nSection: ${student.section}\nStatus: ${student.status || 'pending'}\nScore: ${student.score || 'N/A'}`);
+        }
+    };
+
+    window.editStudent = function(studentId) {
+        const student = students.find(s => s.id === studentId);
+        if (student) {
+            alert(`Edit functionality for ${student.firstName} ${student.lastName} would be implemented here.`);
+        }
+    };
+
+    window.viewStudentResult = function(studentId, testName, result, score) {
+        const student = students.find(s => s.id === studentId);
+        if (student) {
+            const fullName = `${student.firstName || ''} ${student.lastName || ''}`.trim();
+            alert(`Test Result Details:\n\nStudent: ${fullName}\nTest: ${testName}\nResult: ${result}\nScore: ${score}/100\n\nFor more details, view the student's complete test history.`);
+        }
+    };
+
+    // Other window functions remain the same...
+    window.uploadStudentList = function() {
+        alert('Upload student list functionality would be implemented here.');
+    };
+
+    window.scheduleNewTest = function() {
+        window.location.href = 'testmanagement.html';
+    };
+
+    window.postAnnouncement = function() {
+        alert('Post announcement functionality would be implemented here.');
+    };
+
+    window.checkDatabaseStructure = async function() {
+        try {
+            console.log("=== DATABASE DIAGNOSTICS ===");
+            
+            const sectionsSnapshot = await getDocs(collection(db, 'sections'));
+            console.log("Total sections:", sectionsSnapshot.size);
+            
+            const studentsSnapshot = await getDocs(collection(db, 'students'));
+            console.log("Total students:", studentsSnapshot.size);
+            
+            let studentsBySection = {};
+            studentsSnapshot.forEach(doc => {
+                const data = doc.data();
+                const section = data.section || 'No Section';
+                studentsBySection[section] = (studentsBySection[section] || 0) + 1;
+            });
+            
+            console.log("Students by section:", studentsBySection);
+            
+            alert(`Database Check Complete!\n\nTotal Sections: ${sectionsSnapshot.size}\nTotal Students: ${studentsSnapshot.size}\n\nCheck console for detailed breakdown.`);
+            
+        } catch (error) {
+            console.error("Error checking database:", error);
+            alert("Error: " + error.message);
+        }
+    };
+
+    window.fixStudentLinks = function() {
+        alert('This feature would link students to sections. Currently students should be assigned to sections when they register.');
+    };
+
+    window.generateReport = function() {
+    if (!currentSection) {
+        alert('Please select a section first.');
+        return;
+    }
+    
+    const completionData = calculateCompletionData();
+    const scoreData = calculateScoreDistribution();
+    
+    const reportData = {
+        section: currentSection,
+        date: new Date().toLocaleDateString(),
+        totalStudents: completionData.total,
+        completedTests: completionData.completed,
+        completionRate: completionData.completionRate + '%',
+        scoreDistribution: scoreData,
+        averageScore: document.getElementById('statAverageScore').textContent
+    };
+    
+    // Create a simple text report (you can enhance this to generate PDF/Excel)
+    const reportText = `
+UMakFit - Class Performance Report
+Section: ${reportData.section}
+Date: ${reportData.date}
+
+Summary:
+- Total Students: ${reportData.totalStudents}
+- Completed Tests: ${reportData.completedTests}
+- Completion Rate: ${reportData.completionRate}
+- Average Score: ${reportData.averageScore}
+
+Score Distribution:
+- Excellent (90-100): ${reportData.scoreDistribution.excellent} students
+- Good (80-89): ${reportData.scoreDistribution.good} students
+- Fair (70-79): ${reportData.scoreDistribution.fair} students
+- Needs Improvement (<70): ${reportData.scoreDistribution.needsImprovement} students
+    `;
+    
+    // Download as text file
+    const blob = new Blob([reportText], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `UMakFit_Report_${currentSection}_${new Date().toISOString().split('T')[0]}.txt`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    
+    alert('Report generated successfully!');
+};
+
+    // Initialize on authentication
+    onAuthStateChanged(auth, async (user) => {
+    const loadingScreen = document.getElementById('loadingScreen');
+    const classManagementContent = document.getElementById('classManagementContent');
+    
+    if (user) {
+        currentUser = user;
+        console.log('=== CLASS MANAGEMENT INITIALIZED ===');
+        console.log('User:', user.email);
+        
+        try {
+            await loadSections();
+            
+            // ✅ Initialize charts
+            initializeCharts();
+            
+            loadingScreen.style.display = 'none';
+            classManagementContent.style.display = 'block';
+            
+            console.log('✅ Class management loaded successfully');
+        } catch (error) {
+            console.error('Error loading class management:', error);
+            loadingScreen.style.display = 'none';
+            classManagementContent.style.display = 'block';
+        }
+    } else {
+        console.log('No user, redirecting to login');
+        window.location.href = '/login/index.html';
+    }
+});
+
+    console.log('✅ FIXED: Shows ALL students with blank scores until they complete tests');
+</script>
+</body>
+</html>
